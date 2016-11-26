@@ -6,7 +6,7 @@ d3.json('dataset.json', data => {
     if (window.location.search.substring(1).length > 0) {
         //vis(parse(eval("d." + window.location.search.substring(1))))
     }
-    heatmapDraw(d.PRT)
+    heatmapDraw(d.Europe, d.America)
 });
 
 var parseTime = d3.timeParse("%Y");
