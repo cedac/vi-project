@@ -4,8 +4,9 @@ var xpto;
 d3.json('dataset.json', data => {
     d = data
     if (window.location.search.substring(1).length > 0) {
-        vis(parse(eval("d." + window.location.search.substring(1))))
+        //vis(parse(eval("d." + window.location.search.substring(1))))
     }
+    heatmapDraw(d.PRT)
 });
 
 var parseTime = d3.timeParse("%Y");

@@ -32,7 +32,7 @@ d3.json("dataset.json", function (data) {
         } 
     }
 
-    genHeatMap();
+    //genHeatMap();
 })
 
 
