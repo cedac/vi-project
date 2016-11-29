@@ -8,13 +8,47 @@
   </head>
 
   <body>
-    <div id="div1"></div>
-    <div id="div2"></div>
-    <div id="div3"></div>
+    <div class="topleft">Global Peace Index</div>
+    <div class="topcenter">
+      Select 1 or 2 countries! Or continents, if you prefer<br>
+      <select name="country1">
+        <option value="">Select...</option>
+        <option value="africa">Africa</option>
+        <option value="america">America</option>
+        <option value="europe">Europe</option>
+      </select>
+      <select name="country2">
+        <option value="">Select...</option>
+        <option value="africa">Africa</option>
+        <option value="america">America</option>
+        <option value="europe">Europe</option>
+      </select>
+    </div>
+    <div class="topright">
+      <div id="slider"><input class="bar" type="range" id="rangeinput" min="2008" max="2014" value="0" step="1" onchange="showValue(this.value)" />
+      <span id="range">2008</span>
+      <script type="text/javascript">
+        function showValue(newValue) {
+	        document.getElementById("range").innerHTML=newValue;
+        }
+      </script></div>
+    </div>
+    <div class="push"></div>
+
+
+      <div id="wrapper">
+        <br><br><br>
+        <div id="div2" class="img"><img src="http://i.imgur.com/wsrc15E.jpg" width="610" height="420"></div>
+        <div id="div3" class="heatmap"></div>
+      </div>
+    <div style="clear:both"></div>
+    <hr>
     <div id="div4"></div>
-    <svg width="960" height="500"></svg>
+    <div id="div5"></div>
+    
 
     <script src="metrics.js"></script>
+    <script src="linechart.js"></script>
     <script src="heatmap.js"></script>
     <script src="jedi.js"></script>
     <script src="pasadinhas.js"></script>
