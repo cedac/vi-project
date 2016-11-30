@@ -6,8 +6,30 @@ d3.json('dataset.json', data => {
     if (window.location.search.substring(1).length > 0) {
         //vis(parse(eval("d." + window.location.search.substring(1))))
     }
-    heatmapDraw(d.Europe, d.America)
+    sortMetrics(d.PRT)
+    heatmapDraw(d.USA, d.UGA)
 });
+
+function sortMetrics(country) {
+    var values = [];
+    for (metric in country) {
+        if (typeof country[metric] === 'object') {
+            if (METRICS[metric].five !== true) {
+                continue;
+            }
+            values.push({
+                v: country[metric][YEAR],
+                m: metric
+            })
+        }
+    }
+    values.sort(function(a,b) {return (a.v > b.v) ? 1 : ((b.v > a.v) ? -1 : 0);} )
+    for (var i = 0; i < values.length; i++) {
+        console.log(values[i].m + " sort index is now " + i)
+        METRICS[values[i].m].sort = i
+    }
+    console.log(METRICS)
+}
 
 var parseTime = d3.timeParse("%Y");
 

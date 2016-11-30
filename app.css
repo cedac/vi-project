@@ -18,6 +18,11 @@ body {
 	background: -webkit-linear-gradient(bottom, #666666 0%,#a5a5a5 50%,#c4c4c4 100%);
 }
 
+* {
+  color: white;
+  transition: opacity .05s ease-in-out;
+}
+
 .topcenter {
   position:fixed;
   width: 30%;
