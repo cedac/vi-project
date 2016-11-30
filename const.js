@@ -3,8 +3,8 @@ const WIDTH = 0
 const HEIGHT = 0
 const HEATMAP_DIV_SELECTOR = "#div3"
 
-const DOTPLOT_SIZE = 60
-const DOTPLOT_X_PADDING = 250
+const DOTPLOT_SIZE = 70
+const DOTPLOT_X_PADDING = 240
 const YEAR = "2008"
 
 COLORS = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3','#2166ac'].reverse()

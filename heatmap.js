@@ -15,13 +15,33 @@ dispatcher.on('metricLeave.heatmap', function(d) {
 dispatcher.on('metricEnter.cdot', function(d) {
     heatmapSVG.selectAll(".dot1, .dot2, .linediff")
         .filter(e => e.code !== d.metric_code)
+        .attr('r', 3)
         .style('opacity', FADE_OPACITY)
+        
 })
 
 dispatcher.on('metricLeave.cdot', function(d) {
     heatmapSVG.selectAll(".dot1, .dot2, .linediff")
         .style('opacity', 1)
+
+    heatmapSVG.selectAll(".dot1, .dot2")
+        .attr('r', 5)
 })
+
+dispatcher.on('country1Selected.heatmap', country => {
+    sortMetrics(d[country])
+    drawCountry(d[country], 1)
+    drawCountry(d[country2], 2)
+    drawHeatmapMetricAxis()
+    drawDotplot(d[country], d[country2])
+})
+
+dispatcher.on('country2Selected.heatmap', country => {
+    drawCountry(d[country], 2)
+    drawDotplot(d[country1], d[country])
+})
+
+
 
 function parseHeatmapData(country, year) {
     var data = []; 
@@ -55,7 +75,8 @@ var margin = {
     legendElementWidth = gridSize * 2,
     buckets = 8,
     years = ["08", "09", "10", "11", "12", "13", "14"];
-    //years = ["2008", "", "", "", "", "", "2014"];
+    years = ["2008", "", "", "", "", "", "2014"];
+    //years = ["'08", "", "", "", "", "", "'14"];
 
 var heatmapSVG = d3.select(HEATMAP_DIV_SELECTOR).append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -63,15 +84,28 @@ var heatmapSVG = d3.select(HEATMAP_DIV_SELECTOR).append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var yearLabels = heatmapSVG.selectAll(".timeLabel")
+var yearsLabel = heatmapSVG.selectAll(".timeLabel")
     .data(years)
-    .enter().append("text")
+    .enter()
+
+yearsLabel
+    .append("text")
     .text(function(d) { return d; })
     .attr("x", function(d, i) { return i * gridSize; })
     .attr("y", 0)
     .style("text-anchor", "middle")
     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
+    .attr("class", "timeLabel mono axis")
+
+yearsLabel
+    .append("text")
+    .text(function(d) { return d; })
+    .attr("x", function(d, i) { return i * gridSize + COUNTRY_2_OFFSET; })
+    .attr("y", 0)
+    .style("text-anchor", "middle")
+    .attr("transform", "translate(" + gridSize / 2 + ", -6)")
     .attr("class", "timeLabel mono axis");
+
 
 var colorScale = d3.scaleQuantile()
     .domain([1, 5])
@@ -100,9 +134,9 @@ function drawCountry(country, n) {
     
     squares
         .transition().duration(1000)
-        .attr("y", function(d) { return (d.metric) * height / 25; })
-        .transition().duration(1000)
         .style("fill", function(d) { return colorScale(d.value); })
+        .transition().duration(1000)
+        .attr("y", function(d) { return (d.metric) * height / 25; })
 
     squares.exit().remove();
 }

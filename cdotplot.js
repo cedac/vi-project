@@ -25,7 +25,7 @@ function drawDotplot(c1, c2) {
         .attr('y1', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
         .attr('y2', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
         .attr('x1', function(d) { return DOTPLOT_X_PADDING})
-        .attr('x2', function(d) { return DOTPLOT_X_PADDING + 5 * DOTPLOT_SIZE })
+        .attr('x2', function(d) { return DOTPLOT_X_PADDING + 4 * DOTPLOT_SIZE })
         .attr('class', 'line-background')
         .style('stroke', '#333')
         .style('stroke-width', '0.5px')
@@ -39,15 +39,15 @@ function drawDotplot(c1, c2) {
         .append('line')
         .attr('y1', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
         .attr('y2', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
-        .attr('x1', function(d) { return DOTPLOT_X_PADDING + Math.min(d.v1, d.v2) * DOTPLOT_SIZE})
-        .attr('x2', function(d) { return DOTPLOT_X_PADDING + Math.max(d.v1, d.v2) * DOTPLOT_SIZE })
+        .attr('x1', function(d) { return DOTPLOT_X_PADDING + (Math.min(d.v1, d.v2) - 1) * DOTPLOT_SIZE})
+        .attr('x2', function(d) { return DOTPLOT_X_PADDING + (Math.max(d.v1, d.v2) - 1) * DOTPLOT_SIZE })
         .attr('class', 'linediff')
         .style('stroke', function(d) {return d.color})
 
     lineDiffSelection
         .transition().duration(1000)
-        .attr('x1', function(d) { return DOTPLOT_X_PADDING + Math.min(d.v1, d.v2) * DOTPLOT_SIZE})
-        .attr('x2', function(d) { return DOTPLOT_X_PADDING + Math.max(d.v1, d.v2) * DOTPLOT_SIZE })
+        .attr('x1', function(d) { return DOTPLOT_X_PADDING + (Math.min(d.v1, d.v2) - 1) * DOTPLOT_SIZE})
+        .attr('x2', function(d) { return DOTPLOT_X_PADDING + (Math.max(d.v1, d.v2) - 1) * DOTPLOT_SIZE })
         .transition().duration(1000)        
         .attr('y1', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
         .attr('y2', function(d) { return d.metric.sort * height / 25 + gridSize/2 })
@@ -62,7 +62,7 @@ function drawDotplot(c1, c2) {
     dot1Selection
         .enter()
         .append('circle')
-        .attr('cx', function(d) {return DOTPLOT_X_PADDING + d.v1 * DOTPLOT_SIZE })
+        .attr('cx', function(d) {return DOTPLOT_X_PADDING + (d.v1 - 1) * DOTPLOT_SIZE })
         .attr('cy', function(d) {return d.metric.sort * height / 25 + gridSize/2})
         .attr('r', function(d) {return 5})
         .attr('class', 'dot1')
@@ -71,7 +71,7 @@ function drawDotplot(c1, c2) {
 
     dot1Selection
         .transition().duration(1000)
-        .attr('cx', function(d) {return DOTPLOT_X_PADDING + d.v1 * DOTPLOT_SIZE })
+        .attr('cx', function(d) {return DOTPLOT_X_PADDING + (d.v1 - 1) * DOTPLOT_SIZE })
         .transition().duration(1000)        
         .attr('cy', function(d) {return d.metric.sort * height / 25 + gridSize/2})
 
@@ -85,7 +85,7 @@ function drawDotplot(c1, c2) {
     dot2Selection
         .enter()
         .append('circle')
-        .attr('cx', function(d) {return DOTPLOT_X_PADDING + d.v2 * DOTPLOT_SIZE })
+        .attr('cx', function(d) {return DOTPLOT_X_PADDING + (d.v2 - 1) * DOTPLOT_SIZE })
         .attr('cy', function(d) {return d.metric.sort * height / 25 + gridSize/2})
         .attr('r', function(d) {return 5})
         .attr('class', 'dot2')
@@ -94,7 +94,7 @@ function drawDotplot(c1, c2) {
 
     dot2Selection
         .transition().duration(1000)
-        .attr('cx', function(d) {return DOTPLOT_X_PADDING + d.v2 * DOTPLOT_SIZE })
+        .attr('cx', function(d) {return DOTPLOT_X_PADDING + (d.v2 - 1) * DOTPLOT_SIZE })
         .transition().duration(1000)        
         .attr('cy', function(d) {return d.metric.sort * height / 25 + gridSize/2})
 
