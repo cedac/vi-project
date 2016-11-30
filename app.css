@@ -146,6 +146,16 @@ text {
   stroke-width: 1.5px;
 }
 
+.hovered {
+  stroke: #ff9400;
+  stroke-width: 1.5px;
+}
+
+.selected {
+  stroke: #d21eff;
+  stroke-width: 1.5px;
+}
+
 rect.bordered {
   stroke: #111;
   stroke-width:1px;   
