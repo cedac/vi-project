@@ -25,10 +25,8 @@ function sortMetrics(country) {
     }
     values.sort(function(a,b) {return (a.v > b.v) ? 1 : ((b.v > a.v) ? -1 : 0);} )
     for (var i = 0; i < values.length; i++) {
-        console.log(values[i].m + " sort index is now " + i)
         METRICS[values[i].m].sort = i
     }
-    console.log(METRICS)
 }
 
 var parseTime = d3.timeParse("%Y");

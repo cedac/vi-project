@@ -1,5 +1,29 @@
-const COUNTRY_2_OFFSET = 120
+const COUNTRY_2_OFFSET = 115
 var UNIQUE_ID = 0
+
+var dispatcher = d3.dispatch("valueEnter", "metricEnter", "metricLeave", "yearEnter", "countryEnter")
+
+dispatcher.on('metricEnter.heatmap', function(d) {
+    heatmapSVG.selectAll(".country1, .country2")
+        .filter(e => e.metric !== d.metric)
+        .style('opacity', FADE_OPACITY)
+})
+
+dispatcher.on('metricLeave.heatmap', function(d) {
+    heatmapSVG.selectAll(".country1, .country2")
+        .style('opacity', 1)
+})
+
+dispatcher.on('metricEnter.cdot', function(d) {
+    heatmapSVG.selectAll(".dot1, .dot2, .linediff")
+        .filter(e => e.code !== d.metric_code)
+        .style('opacity', FADE_OPACITY)
+})
+
+dispatcher.on('metricLeave.cdot', function(d) {
+    heatmapSVG.selectAll(".dot1, .dot2, .linediff")
+        .style('opacity', 1)
+})
 
 function parseHeatmapData(country, year) {
     var data = []; 
@@ -19,16 +43,6 @@ function parseHeatmapData(country, year) {
         }
     }
     return data;
-}
-
-
-function fade(opacity, d) {
-    d3.selectAll("rect")
-        .filter(function(e) { return e.metric !== d.metric; })
-        .style("opacity", opacity);
-    d3.selectAll(".dot1, .dot2, .linediff")
-        .filter(function(e) { console.log(e.code + ":" + d.metric_code); return e.code !== d.metric_code })
-        .style('opacity', opacity)
 }
 
 var margin = {
@@ -82,8 +96,8 @@ function drawCountry(country, n) {
         .attr("width", gridSize)
         .attr("height", gridSize)
         .attr("debug", d => d.metric + ":" + d.value)
-        .on("mouseover", function(d) { fade(FADE_OPACITY, d) })
-        .on("mouseout", function(d) { fade(1, d) })
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d) })
         .style("fill", function(d) { return colorScale(d.value); })
     
     squares
