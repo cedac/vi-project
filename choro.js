@@ -17,10 +17,20 @@ var mapIdiomSVG;
 var projection;
 var path;
 
+var countriesWithData;
+
+var tooltip = d3.select("body")
+        .append("div")
+        .classed("map-tooltip", true)
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("visibility", "hidden");
+
 d3.json("dataset.json", function (data) {
     dataset = data;
     metric = "OVERALL";
 
+    countriesWithData = Object.keys(dataset);
     genChoroplethMap();
 })
 
@@ -63,8 +73,6 @@ function drawMap(error, data) {
     .domain([1, 5])
     .range(colors);
 
-    //mapSVG.style("stroke", "#111");
-
     mapSVG.selectAll(".country")
             .data(countries)
             .enter().append("path")
@@ -72,6 +80,7 @@ function drawMap(error, data) {
             .attr("fill", heatColor)
             .attr("d", path)
             .on("mouseover", hoverOn)
+            .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
             .on("mouseout", hoverOff)
             .on("click", click);
 }
@@ -94,37 +103,45 @@ function click(c) {
         if (country2 != undefined) {
             d3.selectAll(".country")
                 .filter(function(d){ return d.id == country2;})
-                .classed("selected", false);
+                .classed("selected2", false);
         }
 
         country2 = c.id;
-        d3.select(this).classed("selected", true);
+        d3.select(this).classed("selected2", true);
         dispatcher.call("country2Selected", this, country2);
 
     } else {
         if (country1 != undefined) {
             d3.selectAll(".country")
                 .filter(function(d){ return d.id == country1;})
-                .classed("selected", false);
+                .classed("selected1", false);
         }
 
         country1 = c.id;
-        d3.select(this).classed("selected", true);
+        d3.select(this).classed("selected1", true);
         dispatcher.call("country1Selected", this, country1);
     }
 }
 
-dispatcher.on("country1Selected", console.log) 
-
 function hoverOn(c) {
     if (c.id == country1 || c.id == country2) return;
+    if (countriesWithData.indexOf(c.id) == -1) {
+        tooltip.style("visibility", "hidden");
+        return;
+    }
 
-    d3.select(this).classed("hovered", true);
+    d3.selectAll(".country").filter(d => d.id !== c.id).style("opacity", 0.6);
+
+
+    tooltip.html("<p>" + c.properties.name + "</p><p>" + dataset[c.id].OVERALL["" + year] + "</p>");
+    tooltip.style("visibility", "visible");
 }
 
 function hoverOff(c) {
 
+    d3.selectAll(".country").style("opacity", 1);
     d3.select(this).classed("hovered", false);
+    tooltip.style("visibility", "hidden");
 
 }
 

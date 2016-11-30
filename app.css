@@ -21,6 +21,7 @@ body {
 * {
   color: white;
   transition: opacity .05s ease-in-out;
+  font-family: "Tahoma";
 }
 
 .topcenter {
@@ -147,13 +148,23 @@ text {
 }
 
 .hovered {
-  stroke: #ff9400;
-  stroke-width: 1.5px;
+  stroke: #ff9400 !important;
+  stroke-width: 1.5px !important;
 }
 
-.selected {
-  stroke: #d21eff;
-  stroke-width: 1.5px;
+.selected1 {
+  stroke: #b2df8a !important;
+  stroke-width: 1.5px !important;
+}
+
+.selected2 {
+  stroke: #a6cee3 !important;
+  stroke-width: 1.5px !important;
+}
+
+.country {
+  stroke: #111;
+  stroke-width: 0.1px;
 }
 
 rect.bordered {
@@ -189,4 +200,10 @@ text.axis-worktime {
 
 pontos {
   stroke: #FFFF00;
+}
+
+.map-tooltip {
+  padding: 10px;
+  border-radius: 5px;
+  background: rgba(78, 74, 74, 0.60);
 }
