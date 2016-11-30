@@ -2,7 +2,7 @@
 var dataset;
 var world;
 var metric;
-const MAP_DIV_SELECTOR = "#DIV1";
+const MAP_DIV_SELECTOR = "#DIV2";
 
 
 var colors = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3','#2166ac'].reverse();
@@ -34,8 +34,11 @@ function genChoroplethMap() {
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .style("border", "1px solid #333");
-    
+                .style("border", "1px solid #333")
+                .call(d3.zoom()
+                .scaleExtent([1 / 2, 4])
+                .on("zoom", zoomed));
+            
     mapSVG = mapIdiomSVG.append("g");
 
 
@@ -71,15 +74,6 @@ function drawMap(error, data) {
             .on("mouseover", hoverOn)
             .on("mouseout", hoverOff)
             .on("click", click);
-    
-    mapIdiomSVG.append("rect")
-    .attr("width", width)
-    .attr("height", height)
-    .style("fill", "none")
-    .style("pointer-events", "all")
-    .call(d3.zoom()
-        .scaleExtent([1 / 2, 4])
-        .on("zoom", zoomed));
 }
 
 function isSelected(c) {
@@ -105,6 +99,8 @@ function click(c) {
 
         country2 = c.id;
         d3.select(this).classed("selected", true);
+        dispatcher.call("country2Selected", this, country2);
+
     } else {
         if (country1 != undefined) {
             d3.selectAll(".country")
@@ -114,8 +110,11 @@ function click(c) {
 
         country1 = c.id;
         d3.select(this).classed("selected", true);
+        dispatcher.call("country1Selected", this, country1);
     }
 }
+
+dispatcher.on("country1Selected", console.log) 
 
 function hoverOn(c) {
     if (c.id == country1 || c.id == country2) return;

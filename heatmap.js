@@ -1,8 +1,6 @@
 const COUNTRY_2_OFFSET = 115
 var UNIQUE_ID = 0
 
-var dispatcher = d3.dispatch("valueEnter", "metricEnter", "metricLeave", "yearEnter", "countryEnter")
-
 dispatcher.on('metricEnter.heatmap', function(d) {
     heatmapSVG.selectAll(".country1, .country2")
         .filter(e => e.metric !== d.metric)
