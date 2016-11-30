@@ -191,6 +191,10 @@ text.axis-worktime {
   float: left;
 }
 
+.map {
+  display: inline-block;
+}
+
 .heatmap {
   width: 700px;
   height: 420px; 

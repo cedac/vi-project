@@ -38,7 +38,7 @@ function genChoroplethMap() {
 
     var margin = {top: 20, right: 90, bottom: 30, left: 50},
         width = 710 - margin.left - margin.right,
-        height = 550 - margin.top - margin.bottom;
+        height = 350 - margin.top - margin.bottom;
 
     mapIdiomSVG = d3.select(MAP_DIV_SELECTOR).append("svg")
                 .attr("width", width + margin.left + margin.right)
