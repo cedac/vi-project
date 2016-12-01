@@ -9,6 +9,7 @@ body {
   left: 0;
   height: 45px;
   background:#B9B9B9;
+  color: Black;
   font-family: "Tahoma";
   text-align: center;
   font-weight: bold;
@@ -45,6 +46,7 @@ body {
   left: 810;
   height: 45px;
   background:#B9B9B9;
+  color: Black;
   font-family: "Tahoma";
   text-align: center;
   font-weight: bold;
@@ -201,7 +203,7 @@ text.axis-worktime {
   float: right;
 }
 
-pontos {
+.pontos {
   stroke: #FFFF00;
 }
 
