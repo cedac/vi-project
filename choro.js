@@ -1,14 +1,11 @@
 
 var dataset;
 var world;
-var metric;
+var mapMetric = "OVERALL";
 const MAP_DIV_SELECTOR = "#DIV2";
 
 
 var colors = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3','#2166ac'].reverse();
-
-var year = 2014;
-
 
 var mapSVG;
 var mapIdiomSVG;
@@ -28,7 +25,7 @@ var tooltip = d3.select("body")
 
 d3.json("dataset.json", function (data) {
     dataset = data;
-    metric = "OVERALL";
+    mapMetric = "OVERALL";
 
     countriesWithData = Object.keys(dataset);
     genChoroplethMap();
@@ -82,21 +79,7 @@ function drawMap(error, data) {
     .range(colors);
 
     var allContinents = [asia, europe, africa, america, oceania];
-
-    /*
-    mapSVG.selectAll(".continent")
-            .data(allContinents)
-            .enter().append("path")
-            .attr("class", "continent")
-            .attr("fill", heatColor)
-            .attr("d", path)
-            .style("visibility", "hidden")
-            .on("mouseover", hoverOn)
-            .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
-            .on("mouseout", hoverOff)
-            .on("click", click);
-    */
-
+    
     mapSVG.selectAll(".country")
             .data(countries)
             .enter().append("path")
@@ -258,7 +241,7 @@ function hoverOn(c, forceContinent = false) {
         .filter(d => (getContinent(d) != getContinent(c)))
         .style("opacity", 0.6);
 
-        tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)].OVERALL["" + year] + "</p>");
+        tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)][mapMetric]["" + YEAR] + "</p>");
         tooltip.style("visibility", "visible");
         
     } else {
@@ -267,7 +250,7 @@ function hoverOn(c, forceContinent = false) {
         .style("opacity", 0.6);
 
 
-        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id].OVERALL["" + year] + "</p>");
+        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id].OVERALL["" + YEAR] + "</p>");
         tooltip.style("visibility", "visible");
     }
 
@@ -282,6 +265,44 @@ function hoverOff(c) {
 
 }
 
+dispatcher.on("metricSelected", function(e) {
+    mapMetric = e.metric_code;
+
+    mapSVG.selectAll(".country").attr("fill", heatColor);
+
+    if (isContinent(COUNTRY1)) {
+        mapSVG.selectAll(".country")
+        .filter( d => getContinent(d) == COUNTRY1)
+        .filter( d => !(d.id == COUNTRY2))
+        .attr("fill", heatColorContinent);
+    }
+
+    if (isContinent(COUNTRY2)) {
+        mapSVG.selectAll(".country")
+        .filter( d => getContinent(d) == COUNTRY2)
+        .filter( d => !(d.id == COUNTRY1))
+        .attr("fill", heatColorContinent);
+    }
+});
+
+dispatcher.on("yearSelected", function(e) {
+    mapSVG.selectAll(".country").attr("fill", heatColor);
+
+    if (isContinent(COUNTRY1)) {
+        mapSVG.selectAll(".country")
+        .filter( d => getContinent(d) == COUNTRY1)
+        .filter( d => !(d.id == COUNTRY2))
+        .attr("fill", heatColorContinent);
+    }
+
+    if (isContinent(COUNTRY2)) {
+        mapSVG.selectAll(".country")
+        .filter( d => getContinent(d) == COUNTRY2)
+        .filter( d => !(d.id == COUNTRY1))
+        .attr("fill", heatColorContinent);
+    }
+});
+
 function heatColor(c) {
     var color = d3.scaleQuantile()
                 .domain([1, 5])
@@ -291,7 +312,9 @@ function heatColor(c) {
 
     if (dataset[code] == undefined) return "#ccc";
 
-    var value = dataset[code].OVERALL["" + year];
+    var value = dataset[code][mapMetric]["" + YEAR];
+
+    value = METRICS[mapMetric].scale ? METRICS[mapMetric].scale(value) : value;
 
     return color(+value);
 }
@@ -307,7 +330,7 @@ function heatColorContinent(c) {
 
     var cContinent = dataset[code].Continent;
 
-    var value = dataset[cContinent].OVERALL["" + year];
+    var value = dataset[cContinent][mapMetric]["" + YEAR];
 
     return color(+value);
 }
