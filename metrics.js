@@ -17,6 +17,7 @@ var METRICS = {
     },
     HOMICIDES: {
         code: "HOMICIDES",
+        name: "Homicides",
         five: true,
         max: 0,
         min: 0,
@@ -25,6 +26,7 @@ var METRICS = {
     },
     ARMY: {
         code: "ARMY",
+        name: "Army Personnel",
         five: true,
         max: 0,
         min: 0,
@@ -33,6 +35,7 @@ var METRICS = {
     },
     CRIME_PERCEPTION: {
         code: "CRIME_PERCEPTION",
+        name: "Crime Perception",
         five: true,
         max: 0,
         min: 0,
@@ -41,6 +44,7 @@ var METRICS = {
     },
     RANK: {
         code: "RANK",
+        name: "Rank",
         five: false,
         max: 0,
         min: 0,
@@ -49,6 +53,7 @@ var METRICS = {
     },
     VIOLENT_CRIME: {
         code: "VIOLENT_CRIME",
+        name: "Violent Crime",
         five: true,
         max: 0,
         min: 0,
@@ -57,6 +62,7 @@ var METRICS = {
     },
     FOREIGN_RELATIONS: {
         code: "FOREIGN_RELATIONS",
+        name: "Foreign Relations",
         five: true,
         max: 0,
         min: 0,
@@ -65,6 +71,7 @@ var METRICS = {
     },
     UN_FUNDING: {
         code: "UN_FUNDING",
+        name: "UN Funding",
         five: true,
         max: 0,
         min: 0,
@@ -73,6 +80,7 @@ var METRICS = {
     },
     POLICE: {
         code: "POLICE",
+        name: "Police Personnel",
         five: true,
         max: 0,
         min: 0,
@@ -81,6 +89,7 @@ var METRICS = {
     },
     WEAPON_ACCESS: {
         code: "WEAPON_ACCESS",
+        name: "Access to Weapons",
         five: true,
         max: 0,
         min: 0,
@@ -89,6 +98,7 @@ var METRICS = {
     },
     WEAPON_IMPORTS: {
         code: "WEAPON_IMPORTS",
+        name: "Weapon Importation",
         five: true,
         max: 0,
         min: 0,
@@ -97,6 +107,7 @@ var METRICS = {
     },
     POLITICAL_TERROR: {
         code: "POLITICAL_TERROR",
+        name: "Political Terror",
         five: true,
         max: 0,
         min: 0,
@@ -105,6 +116,7 @@ var METRICS = {
     },
     INTERNAL_CONFLICTS: {
         code: "INTERNAL_CONFLICTS",
+        name: "Internal Cnflicts",
         five: true,
         max: 0,
         min: 0,
@@ -113,6 +125,7 @@ var METRICS = {
     },
     EXTERNAL_CONFLICTS: {
         code: "EXTERNAL_CONFLICTS",
+        name: "External Conflicts",
         five: true,
         max: 0,
         min: 0,
@@ -121,6 +134,7 @@ var METRICS = {
     },
     TERRORISM_IMPACT: {
         code: "TERRORISM_IMPACT",
+        name: "Terrorism Impact",
         five: true,
         max: 0,
         min: 0,
@@ -129,6 +143,7 @@ var METRICS = {
     },
     POLITICAL_INSTABILITY: {
         code: "POLITICAL_INSTABILITY",
+        name: "Political Instability",
         five: true,
         max: 0,
         min: 0,
@@ -137,6 +152,7 @@ var METRICS = {
     },
     REFUGEES: {
         code: "REFUGEES",
+        name: "Fleeing Refugees",
         five: true,
         max: 0,
         min: 0,
@@ -145,6 +161,7 @@ var METRICS = {
     },
     WEAPON_EXPORTS: {
         code: "WEAPON_EXPORTS",
+        name: "Weapon Exportation",
         five: true,
         max: 0,
         min: 0,
@@ -153,6 +170,7 @@ var METRICS = {
     },
     HEAVY_WEAPONS: {
         code: "HEAVY_WEAPONS",
+        name: "Heavy Weapons",
         five: true,
         max: 0,
         min: 0,
@@ -161,6 +179,7 @@ var METRICS = {
     },
     EXTERNAL_DEATHS: {
         code: "EXTERNAL_DEATHS",
+        name: "Deaths in Ext. Conflict",
         five: true,
         max: 0,
         min: 0,
@@ -169,6 +188,7 @@ var METRICS = {
     },
     OVERALL: {
         code: "OVERALL",
+        name: "Overall",
         five: true,
         max: 0,
         min: 0,
@@ -177,6 +197,7 @@ var METRICS = {
     },
     INTERNAL_CONFLICTS_INTENSITY: {
         code: "INTERNAL_CONFLICTS_INTENSITY",
+        name: "Int. Conflict Intensity",
         five: true,
         max: 0,
         min: 0,
@@ -185,6 +206,7 @@ var METRICS = {
     },
     INTERNAL_DEATHS: {
         code: "INTERNAL_DEATHS",
+        name: "Deaths in Int. Conflicts",
         five: true,
         max: 0,
         min: 0,
@@ -193,6 +215,7 @@ var METRICS = {
     },
     MILITARY_EXPENDINTURE: {
         code: "MILITARY_EXPENDINTURE",
+        name: "Military Expenditure",
         five: true,
         max: 0,
         min: 0,
@@ -201,6 +224,7 @@ var METRICS = {
     },
     JAIL: {
         code: "JAIL",
+        name: "People Incarcerated",
         five: true,
         max: 0,
         min: 0,
@@ -209,6 +233,7 @@ var METRICS = {
     },
     VIOLENT_DEMONSTRATIONS: {
         code: "VIOLENT_DEMONSTRATIONS",
+        name: "Violent Demonstration",
         five: true,
         max: 0,
         min: 0,
@@ -217,6 +242,7 @@ var METRICS = {
     },
     GDPPC: {
         code: "GDPPC",
+        name: "GDP per Capita",
         five: false,
         // how to get the maximum:
         // d3.max(d3.values(d).map(d => d.GDPPC).map(d => d3.max(d3.values(d))))
@@ -229,6 +255,7 @@ var METRICS = {
     },
     INTERNET: {
         code: "INTERNET",
+        name: "Access to Internet",
         five: false,
         scale: d3.scaleLinear().domain([0,100]).range([5,1]),
         max: 0,
@@ -246,6 +273,7 @@ var METRICS = {
     },
     UNEMPLOYMENT: {
         code: "UNEMPLOYMENT",
+        name: "Unemployment",
         five: false,
         scale: d3.scaleLinear().domain([0,100]).range([1,5]),
         max: 0,
