@@ -159,11 +159,16 @@ text {
 }
 
 .selected2 {
-  stroke: #a6cee3 !important;
+  stroke: #FF0000 !important;
   stroke-width: 1.5px !important;
 }
 
 .country {
+  stroke: #111;
+  stroke-width: 0.1px;
+}
+
+.continent {
   stroke: #111;
   stroke-width: 0.1px;
 }

@@ -19,6 +19,8 @@ var path;
 
 var countriesWithData;
 
+var hoveredCountry = undefined;
+
 var tooltip = d3.select("body")
         .append("div")
         .classed("map-tooltip", true)
@@ -51,6 +53,10 @@ function genChoroplethMap() {
             
     mapSVG = mapIdiomSVG.append("g");
 
+    d3.select("body")
+    .on("keydown", onKeyDown)
+    .on("keyup", onKeyUp);
+
 
     projection = d3.geoMercator().translate([width/2, height/2+100]);
 
@@ -65,24 +71,51 @@ function genChoroplethMap() {
 
 function drawMap(error, data) {
     world = data;
-    console.log(data);
     var countries = topojson.feature(data, data.objects.countries).features;
-    console.log()
+
+    var asia = {type: "FeatureCollection", name: "Asia", id: "Asia", features: countries.filter(d => filterContinents(d, "Asia"))};
+    var europe = {type: "FeatureCollection", name: "Europe", id: "Europe", features: countries.filter(d => filterContinents(d, "Europe"))};
+    var africa = {type: "FeatureCollection", name: "Africa", id: "Africa", features: countries.filter(d => filterContinents(d, "Africa"))};
+    var america = {type: "FeatureCollection", name: "America", id: "America", features: countries.filter(d => filterContinents(d, "America"))};
+    var oceania = {type: "FeatureCollection", name: "Oceania", id: "Oceania", features: countries.filter(d => filterContinents(d, "Oceania"))};
 
     var color = d3.scaleQuantile()
     .domain([1, 5])
     .range(colors);
 
+    var allContinents = [asia, europe, africa, america, oceania];
+
+    /*
+    mapSVG.selectAll(".continent")
+            .data(allContinents)
+            .enter().append("path")
+            .attr("class", "continent")
+            .attr("fill", heatColor)
+            .attr("d", path)
+            .style("visibility", "hidden")
+            .on("mouseover", hoverOn)
+            .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
+            .on("mouseout", hoverOff)
+            .on("click", click);
+    */
+
     mapSVG.selectAll(".country")
             .data(countries)
             .enter().append("path")
             .attr("class", "country")
+            .property("continent", getContinent)
             .attr("fill", heatColor)
             .attr("d", path)
             .on("mouseover", hoverOn)
             .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
             .on("mouseout", hoverOff)
             .on("click", click);
+
+
+}
+
+function filterContinents(country, continent) {
+    return dataset[country.id] ? dataset[country.id].Continent == continent : false
 }
 
 function isSelected(c) {
@@ -98,47 +131,150 @@ function zoomed() {
   mapSVG.attr("transform", d3.event.transform);
 }
 
+function onKeyDown() {
+    if (d3.event.altKey) {
+        //d3.selectAll(".continent").style("visibility", "visible");
+        d3.selectAll(".country").filter(function(d) {return d.id != country1 && d.id !== country2;}).attr("fill", heatColorContinent);
+        if (hoveredCountry) {
+            hoverOn(hoveredCountry, true);
+        }
+    }
+}
+
+function onKeyUp() {
+    if (d3.event.altKey) {
+        return
+    }
+
+    d3.selectAll(".country").attr("fill", heatColor);
+
+    if (country1 && country1.length > 3) {
+        d3.selectAll(".country")
+        .filter( d => getContinent(d) == country1)
+        .filter( d => d != country1)
+        .attr("fill", heatColorContinent)
+    }
+
+    if (country2 && country2.length > 3) {
+        d3.selectAll(".country")
+        .filter( d => getContinent(d) == country2)
+        .filter( d => d != country2)
+        .attr("fill", heatColorContinent)
+    }
+
+    if (hoveredCountry) {
+            hoverOn(hoveredCountry);
+    }
+
+    if ( ! isContinent(country1)) {
+        d3.selectAll(".country").filter( d => d.id == country1).attr("fill", heatColor);
+    }
+
+    if ( ! isContinent(country2)) {
+        d3.selectAll(".country").filter( d => d.id == country2).attr("fill", heatColor);
+    }
+}
+
+
 function click(c) {
+    d3.select(this).classed("selected1", false);
+    d3.select(this).classed("selected2", false);
+
     if(d3.event.shiftKey == true) {
         if (country2 != undefined) {
             d3.selectAll(".country")
-                .filter(function(d){ return d.id == country2;})
-                .classed("selected2", false);
+                .classed("selected2", false)
+                .style("opacity", "0.6");
+            
+            d3.selectAll(".country")
+                .filter(d => getContinent(d) == country2)
+                .filter(d => getContinent(d) != country1)
+                .attr("fill", heatColor);
         }
 
-        country2 = c.id;
-        d3.select(this).classed("selected2", true);
-        dispatcher.call("country2Selected", this, country2);
+        if (d3.event.altKey) {
+            country2 = getContinent(c);
+            d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
+                .filter(d => d.id != country1)
+                .classed("selected2", true)
+                .style("opacity", 1);
+        } else {
+            country2 = c.id;
+            d3.select(this).classed("selected2", true)
+            .style("opacity", 1)
+            .attr("fill", heatColor);
 
+            d3.selectAll(".country").filter(d => getContinent(d) == country1).classed("selected1", true);
+        }
+        dispatcher.call("country2Selected", this, country2);
     } else {
         if (country1 != undefined) {
             d3.selectAll(".country")
-                .filter(function(d){ return d.id == country1;})
-                .classed("selected1", false);
+                .classed("selected1", false)
+                .style("opacity", "0.6");
+
+            d3.selectAll(".country")
+                .filter(d => getContinent(d) == country1)
+                .filter(d => getContinent(d) != country2)
+                .attr("fill", heatColor)
         }
 
-        country1 = c.id;
-        d3.select(this).classed("selected1", true);
+        if (d3.event.altKey) {
+            country1 = getContinent(c);
+            d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
+                .filter(d => d.id != country2)
+                .classed("selected1", true)
+                .attr("fill", heatColorContinent)
+                .style("opacity", 1);
+        } else {
+            country1 = c.id;
+            d3.select(this).classed("selected1", true)
+            .style("opacity", 1)
+            .attr("fill", heatColor);
+
+            d3.selectAll(".country").filter(d => getContinent(d) == country2).classed("selected2", true);
+        }
         dispatcher.call("country1Selected", this, country1);
     }
 }
 
-function hoverOn(c) {
+function hoverOn(c, forceContinent = false) {
     if (c.id == country1 || c.id == country2) return;
     if (countriesWithData.indexOf(c.id) == -1) {
         tooltip.style("visibility", "hidden");
         return;
     }
 
-    d3.selectAll(".country").filter(d => d.id !== c.id).style("opacity", 0.6);
+    hoveredCountry = c;
+
+    if (forceContinent === true) {
+        d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c)).style("opacity", 1);
+    }
+
+    if (d3.event.altKey) {
+        d3.selectAll(".country")
+        .filter(d => (d.id !== c.id && d.id !== country1 && d.id !== country2))
+        .filter(d => (getContinent(d) != getContinent(c)))
+        .style("opacity", 0.6);
+
+        tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)].OVERALL["" + year] + "</p>");
+        tooltip.style("visibility", "visible");
+        
+    } else {
+        d3.selectAll(".country")
+        .filter(d => (d.id !== c.id && d.id !== country1 && d.id !== country2))
+        .style("opacity", 0.6);
 
 
-    tooltip.html("<p>" + c.properties.name + "</p><p>" + dataset[c.id].OVERALL["" + year] + "</p>");
-    tooltip.style("visibility", "visible");
+        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id].OVERALL["" + year] + "</p>");
+        tooltip.style("visibility", "visible");
+    }
+
 }
 
 function hoverOff(c) {
 
+    hoveredCountry = undefined;
     d3.selectAll(".country").style("opacity", 1);
     d3.select(this).classed("hovered", false);
     tooltip.style("visibility", "hidden");
@@ -157,4 +293,32 @@ function heatColor(c) {
     var value = dataset[code].OVERALL["" + year];
 
     return color(+value);
+}
+
+function heatColorContinent(c) {
+    var color = d3.scaleQuantile()
+                .domain([1, 5])
+                .range(colors);
+
+    var code = c.id;
+
+    if (dataset[code] == undefined) return "#ccc";
+
+    var cContinent = dataset[code].Continent;
+
+    var value = dataset[cContinent].OVERALL["" + year];
+
+    return color(+value);
+}
+
+function getContinent(c) {
+    var code = c.id;
+
+    if (dataset[code] == undefined) return "";
+
+    return dataset[code].Continent;
+}
+
+function isContinent(c) {
+    return c.length > 3;
 }
