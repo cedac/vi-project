@@ -106,3 +106,17 @@ function changeYear(v) {
     YEAR = '' + v
     dispatcher.call('yearSelected', this, v)
 }
+
+function playYears(start, end) {
+    document.getElementById("play").disabled = true
+    if (start > end) {
+        document.getElementById("play").disabled = false
+        return
+    }
+    YEAR = start + ''
+    document.getElementById("rangeinput").value = start
+    document.getElementById("range").textContent = start
+    dispatcher.call('yearSelected', this, start + '')
+
+    setTimeout(() => playYears(start + 1, end), 3000)
+}

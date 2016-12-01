@@ -29,7 +29,7 @@
     </div>
     <div class="topright">
       <div id="slider"><input class="bar" type="range" id="rangeinput" min="2008" max="2014" value="0" step="1" onchange="changeYear(this.value)" />
-      <span id="range">2008</span>
+      <span id="range">2008</span> <span><input type="button" value="Play Years" onclick="playYears(2008, 2014)" id="play"></span>
       <script type="text/javascript">
         function showValue(newValue) {
 	        document.getElementById("range").innerHTML=newValue;

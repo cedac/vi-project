@@ -118,4 +118,31 @@ function drawDotplot(c1, c2) {
     dot2Selection
         .exit()
         .remove()
+
+    const cdot_legend_y = 26.5 * gridSize
+    const cdot_legend_size = 3
+    const axis_color = "#777"
+
+    heatmapSVG.append('line')
+        .attr('y1', cdot_legend_y)
+        .attr('y2', cdot_legend_y)
+        .attr('x1', DOTPLOT_X_PADDING + 0 * DOTPLOT_SIZE)
+        .attr('x2', DOTPLOT_X_PADDING + 4 * DOTPLOT_SIZE)
+        .style('stroke', axis_color)
+
+    var legend = heatmapSVG.selectAll('.cdot-legend').data([0,1,2,3,4]).enter()
+
+    legend.append('line')
+        .attr('y1', cdot_legend_y - cdot_legend_size)
+        .attr('y2', cdot_legend_y + cdot_legend_size)
+        .attr('x1', d => DOTPLOT_X_PADDING + d * DOTPLOT_SIZE)
+        .attr('x2', d => DOTPLOT_X_PADDING + d * DOTPLOT_SIZE)
+        .style('stroke', axis_color)
+
+    legend.append('text')
+        .text(d => d+1)
+        .attr('y', cdot_legend_y + 5 * cdot_legend_size)
+        .attr('x', d => DOTPLOT_X_PADDING + d * DOTPLOT_SIZE)
+        .style("text-anchor", "middle")
+        .attr('class', 'mono')
 }

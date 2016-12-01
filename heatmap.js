@@ -66,6 +66,7 @@ dispatcher.on('country2Selected.heatmap', country => {
 })
 
 dispatcher.on('yearSelected.cdot', () => {
+    console.log("handling year")
     sortMetrics(d[COUNTRY1])
     drawCountry(d[COUNTRY1], 1)
     drawCountry(d[COUNTRY2], 2)
