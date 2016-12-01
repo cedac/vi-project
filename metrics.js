@@ -218,6 +218,10 @@ var METRICS = {
     GDPPC: {
         code: "GDPPC",
         five: false,
+        // how to get the maximum:
+        // d3.max(d3.values(d).map(d => d.GDPPC).map(d => d3.max(d3.values(d))))
+        // > 102910.435039364
+        scale: d3.scaleLinear().domain([0,102910.435039364]).range([5,1]),
         max: 0,
         min: 0,
         sort: -1,
@@ -226,6 +230,7 @@ var METRICS = {
     INTERNET: {
         code: "INTERNET",
         five: false,
+        scale: d3.scaleLinear().domain([0,100]).range([5,1]),
         max: 0,
         min: 0,
         sort: -1,
@@ -242,6 +247,7 @@ var METRICS = {
     UNEMPLOYMENT: {
         code: "UNEMPLOYMENT",
         five: false,
+        scale: d3.scaleLinear().domain([0,100]).range([1,5]),
         max: 0,
         min: 0,
         sort: -1,

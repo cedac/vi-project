@@ -10,20 +10,28 @@ d3.json('dataset.json', data => {
     heatmapDraw(d.USA, d.UGA)
 });
 
+function scale_metric(d, v, c) {
+    v = v ? v : (v => v.value)
+    c = c ? c : (c => c.metric)
+    return METRICS[c(d)].scale == undefined ? v(d) : METRICS[c(d)].scale(v(d));
+}
+
 function sortMetrics(country) {
     var values = [];
     for (metric in country) {
         if (typeof country[metric] === 'object') {
-            if (METRICS[metric].five !== true) {
+            if (METRICS[metric].five !== true && METRICS[metric].scale == undefined) {
                 continue;
             }
             values.push({
-                v: country[metric][YEAR],
+                v: scale_metric(country[metric][YEAR], d => d, d => metric),
                 m: metric
             })
         }
     }
-    values.sort(function(a,b) {return (a.v > b.v) ? 1 : ((b.v > a.v) ? -1 : 0);} )
+    values.sort(function(a,b) {
+        return (a.v > b.v) ? 1 : (b.v > a.v) ? -1 : 0
+    })
     for (var i = 0; i < values.length; i++) {
         METRICS[values[i].m].sort = i
     }
@@ -88,4 +96,10 @@ function vis(data) {
         .attr("d", line);
 
     return 2;
+}
+
+function changeYear(v) {
+    showValue(v)
+    YEAR = '' + v
+    dispatcher.call('yearSelected', this, v)
 }

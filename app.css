@@ -178,8 +178,8 @@ rect.bordered {
   stroke-width:1px;   
 }
 
-text.mono {
-  font-size: 9pt;
+text.mono, .mono {
+  font-size: 8pt;
   font-family: Consolas, courier;
   fill: #aaa;
 }
