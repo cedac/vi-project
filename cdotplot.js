@@ -17,7 +17,6 @@ var cdot_linediff_color = d => d.better ? COLORS[1] : COLORS[COLORS.length - 2]
 function parseDotplotData(c1, c2) {
     var data = []
     for (metric in c1) {
-        console.log("metric: " + metric)
         if (METRICS[metric].sort != -1) {
             data.push({
                 v1: c1[metric][YEAR],
@@ -36,7 +35,6 @@ function parseDotplotData(c1, c2) {
 
 function drawDotplot(c1, c2) {
     var cdotdata = parseDotplotData(c1, c2)
-    console.log(cdotdata)
     heatmapSVG.selectAll('.line-background')
         .data(cdotdata, d => d.code)
         .enter()

@@ -21,7 +21,6 @@ dispatcher.on('metricLeave.heatmap', function(d) {
 })
 
 dispatcher.on('metricSelected.heatmap', function(d) {
-    console.log(2)
     drawHeatmapMetricAxis()
 })
 
@@ -54,24 +53,24 @@ dispatcher.on('metricLeave.cdot', function(d) {
 dispatcher.on('country1Selected.heatmap', country => {
     sortMetrics(d[country])
     drawCountry(d[country], 1)
-    drawCountry(d[country2], 2)
+    drawCountry(d[COUNTRY2], 2)
     drawHeatmapMetricAxis()
-    drawHeatmapLegend(d[country], d[country2])
-    drawDotplot(d[country], d[country2])
+    drawHeatmapLegend(d[country], d[COUNTRY2])
+    drawDotplot(d[country], d[COUNTRY2])
 })
 
 dispatcher.on('country2Selected.heatmap', country => {
     drawCountry(d[country], 2)
-    drawHeatmapLegend(d[country1], d[country])
-    drawDotplot(d[country1], d[country])
+    drawHeatmapLegend(d[COUNTRY1], d[country])
+    drawDotplot(d[COUNTRY1], d[country])
 })
 
 dispatcher.on('yearSelected.cdot', () => {
-    sortMetrics(d[country1])
-    drawCountry(d[country1], 1)
-    drawCountry(d[country2], 2)
+    sortMetrics(d[COUNTRY1])
+    drawCountry(d[COUNTRY1], 1)
+    drawCountry(d[COUNTRY2], 2)
     drawHeatmapMetricAxis()
-    drawDotplot(d[country1], d[country2])
+    drawDotplot(d[COUNTRY1], d[COUNTRY2])
 })
 
 
@@ -205,7 +204,7 @@ function drawHeatmapLegend(c1, c2) {
 
     countryNames
         .select('p')
-        .text((d, i) => {console.log([d,i]); return d.name})
+        .text(d => d.name)
         .style('color', (d,i) => distinct_color(i))
         
     countryNames

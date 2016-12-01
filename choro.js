@@ -7,8 +7,6 @@ const MAP_DIV_SELECTOR = "#DIV2";
 
 var colors = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3','#2166ac'].reverse();
 
-var country1;
-var country2;
 var year = 2014;
 
 
@@ -110,6 +108,9 @@ function drawMap(error, data) {
             .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
             .on("mouseout", hoverOff)
             .on("click", click);
+    
+    mapSVG.selectAll(".country").filter( d => d.id == COUNTRY1).classed("selected1", true);
+    mapSVG.selectAll(".country").filter( d => d.id == COUNTRY2).classed("selected2", true);    
 
 
 }
@@ -119,8 +120,8 @@ function filterContinents(country, continent) {
 }
 
 function isSelected(c) {
-    console.log("c.id: " + c.id + " | sel: " + country1);
-    if (c.id == country1) {
+    console.log("c.id: " + c.id + " | sel: " + COUNTRY1);
+    if (c.id == COUNTRY1) {
         return "#FF0000";
     } else {
         return "";
@@ -134,7 +135,7 @@ function zoomed() {
 function onKeyDown() {
     if (d3.event.altKey) {
         //d3.selectAll(".continent").style("visibility", "visible");
-        d3.selectAll(".country").filter(function(d) {return d.id != country1 && d.id !== country2;}).attr("fill", heatColorContinent);
+        d3.selectAll(".country").filter(function(d) {return d.id != COUNTRY1 && d.id !== COUNTRY2;}).attr("fill", heatColorContinent);
         if (hoveredCountry) {
             hoverOn(hoveredCountry, true);
         }
@@ -148,17 +149,17 @@ function onKeyUp() {
 
     d3.selectAll(".country").attr("fill", heatColor);
 
-    if (country1 && country1.length > 3) {
+    if (COUNTRY1 && COUNTRY1.length > 3) {
         d3.selectAll(".country")
-        .filter( d => getContinent(d) == country1)
-        .filter( d => d != country1)
+        .filter( d => getContinent(d) == COUNTRY1)
+        .filter( d => d != COUNTRY1)
         .attr("fill", heatColorContinent)
     }
 
-    if (country2 && country2.length > 3) {
+    if (COUNTRY2 && COUNTRY2.length > 3) {
         d3.selectAll(".country")
-        .filter( d => getContinent(d) == country2)
-        .filter( d => d != country2)
+        .filter( d => getContinent(d) == COUNTRY2)
+        .filter( d => d != COUNTRY2)
         .attr("fill", heatColorContinent)
     }
 
@@ -166,12 +167,12 @@ function onKeyUp() {
             hoverOn(hoveredCountry);
     }
 
-    if ( ! isContinent(country1)) {
-        d3.selectAll(".country").filter( d => d.id == country1).attr("fill", heatColor);
+    if ( ! isContinent(COUNTRY1)) {
+        d3.selectAll(".country").filter( d => d.id == COUNTRY1).attr("fill", heatColor);
     }
 
-    if ( ! isContinent(country2)) {
-        d3.selectAll(".country").filter( d => d.id == country2).attr("fill", heatColor);
+    if ( ! isContinent(COUNTRY2)) {
+        d3.selectAll(".country").filter( d => d.id == COUNTRY2).attr("fill", heatColor);
     }
 }
 
@@ -181,65 +182,65 @@ function click(c) {
     d3.select(this).classed("selected2", false);
 
     if(d3.event.shiftKey == true) {
-        if (country2 != undefined) {
+        if (COUNTRY2 != undefined) {
             d3.selectAll(".country")
                 .classed("selected2", false)
                 .style("opacity", "0.6");
             
             d3.selectAll(".country")
-                .filter(d => getContinent(d) == country2)
-                .filter(d => getContinent(d) != country1)
+                .filter(d => getContinent(d) == COUNTRY2)
+                .filter(d => getContinent(d) != COUNTRY1)
                 .attr("fill", heatColor);
         }
 
         if (d3.event.altKey) {
-            country2 = getContinent(c);
+            COUNTRY2 = getContinent(c);
             d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
-                .filter(d => d.id != country1)
+                .filter(d => d.id != COUNTRY1)
                 .classed("selected2", true)
                 .style("opacity", 1);
         } else {
-            country2 = c.id;
+            COUNTRY2 = c.id;
             d3.select(this).classed("selected2", true)
             .style("opacity", 1)
             .attr("fill", heatColor);
 
-            d3.selectAll(".country").filter(d => getContinent(d) == country1).classed("selected1", true);
+            d3.selectAll(".country").filter(d => getContinent(d) == COUNTRY1).classed("selected1", true);
         }
-        dispatcher.call("country2Selected", this, country2);
+        dispatcher.call("country2Selected", this, COUNTRY2);
     } else {
-        if (country1 != undefined) {
+        if (COUNTRY1 != undefined) {
             d3.selectAll(".country")
                 .classed("selected1", false)
                 .style("opacity", "0.6");
 
             d3.selectAll(".country")
-                .filter(d => getContinent(d) == country1)
-                .filter(d => getContinent(d) != country2)
+                .filter(d => getContinent(d) == COUNTRY1)
+                .filter(d => getContinent(d) != COUNTRY2)
                 .attr("fill", heatColor)
         }
 
         if (d3.event.altKey) {
-            country1 = getContinent(c);
+            COUNTRY1 = getContinent(c);
             d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
-                .filter(d => d.id != country2)
+                .filter(d => d.id != COUNTRY2)
                 .classed("selected1", true)
                 .attr("fill", heatColorContinent)
                 .style("opacity", 1);
         } else {
-            country1 = c.id;
+            COUNTRY1 = c.id;
             d3.select(this).classed("selected1", true)
             .style("opacity", 1)
             .attr("fill", heatColor);
 
-            d3.selectAll(".country").filter(d => getContinent(d) == country2).classed("selected2", true);
+            d3.selectAll(".country").filter(d => getContinent(d) == COUNTRY2).classed("selected2", true);
         }
-        dispatcher.call("country1Selected", this, country1);
+        dispatcher.call("country1Selected", this, COUNTRY1);
     }
 }
 
 function hoverOn(c, forceContinent = false) {
-    if (c.id == country1 || c.id == country2) return;
+    if (c.id == COUNTRY1 || c.id == COUNTRY2) return;
     if (countriesWithData.indexOf(c.id) == -1) {
         tooltip.style("visibility", "hidden");
         return;
@@ -253,7 +254,7 @@ function hoverOn(c, forceContinent = false) {
 
     if (d3.event.altKey) {
         d3.selectAll(".country")
-        .filter(d => (d.id !== c.id && d.id !== country1 && d.id !== country2))
+        .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
         .filter(d => (getContinent(d) != getContinent(c)))
         .style("opacity", 0.6);
 
@@ -262,7 +263,7 @@ function hoverOn(c, forceContinent = false) {
         
     } else {
         d3.selectAll(".country")
-        .filter(d => (d.id !== c.id && d.id !== country1 && d.id !== country2))
+        .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
         .style("opacity", 0.6);
 
 

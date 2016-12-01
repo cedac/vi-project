@@ -5,7 +5,12 @@ const HEATMAP_DIV_SELECTOR = "#div3"
 
 const DOTPLOT_SIZE = 70
 const DOTPLOT_X_PADDING = 240
-var YEAR = "2014"
+
+var YEAR = "2008"
+var COUNTRY1 = "PRT"
+var COUNTRY2 = "ISL"
+
+var SORT_LOCK = false
 
 var selected_metrics = []
 

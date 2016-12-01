@@ -6,8 +6,8 @@ d3.json('dataset.json', data => {
     if (window.location.search.substring(1).length > 0) {
         //vis(parse(eval("d." + window.location.search.substring(1))))
     }
-    sortMetrics(d.PRT)
-    heatmapDraw(d.USA, d.UGA)
+    sortMetrics(d[COUNTRY1])
+    heatmapDraw(d[COUNTRY1], d[COUNTRY2])
 });
 
 function scale_metric(d, v, c) {
@@ -17,6 +17,9 @@ function scale_metric(d, v, c) {
 }
 
 function sortMetrics(country) {
+    if (SORT_LOCK) {
+        return
+    }
     var values = [];
     for (metric in country) {
         if (typeof country[metric] === 'object') {
