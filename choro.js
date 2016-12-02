@@ -15,6 +15,7 @@ var path;
 var countriesWithData;
 
 var hoveredCountry = undefined;
+var altPressed = false;
 
 var tooltip = d3.select("body")
         .append("div")
@@ -117,8 +118,8 @@ function zoomed() {
 
 function onKeyDown() {
     if (d3.event.altKey) {
-        //d3.selectAll(".continent").style("visibility", "visible");
-        d3.selectAll(".country").filter(function(d) {return d.id != COUNTRY1 && d.id !== COUNTRY2;}).attr("fill", heatColorContinent);
+        altPressed = true;
+        updateMap();
         if (hoveredCountry) {
             hoverOn(hoveredCountry, true);
         }
@@ -130,96 +131,33 @@ function onKeyUp() {
         return
     }
 
-    d3.selectAll(".country").attr("fill", heatColor);
-
-    if (COUNTRY1 && COUNTRY1.length > 3) {
-        d3.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY1)
-        .filter( d => d != COUNTRY1)
-        .attr("fill", heatColorContinent)
-    }
-
-    if (COUNTRY2 && COUNTRY2.length > 3) {
-        d3.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY2)
-        .filter( d => d != COUNTRY2)
-        .attr("fill", heatColorContinent)
-    }
+    altPressed = false;
+    updateMap();
 
     if (hoveredCountry) {
             hoverOn(hoveredCountry);
-    }
-
-    if ( ! isContinent(COUNTRY1)) {
-        d3.selectAll(".country").filter( d => d.id == COUNTRY1).attr("fill", heatColor);
-    }
-
-    if ( ! isContinent(COUNTRY2)) {
-        d3.selectAll(".country").filter( d => d.id == COUNTRY2).attr("fill", heatColor);
-    }
+    }  
 }
-
-
 function click(c) {
-    d3.select(this).classed("selected1", false);
-    d3.select(this).classed("selected2", false);
-
-    if(d3.event.shiftKey == true) {
-        if (COUNTRY2 != undefined) {
-            d3.selectAll(".country")
-                .classed("selected2", false)
-                .style("opacity", "0.6");
-            
-            d3.selectAll(".country")
-                .filter(d => getContinent(d) == COUNTRY2)
-                .filter(d => getContinent(d) != COUNTRY1)
-                .attr("fill", heatColor);
-        }
-
-        if (d3.event.altKey) {
-            COUNTRY2 = getContinent(c);
-            d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
-                .filter(d => d.id != COUNTRY1)
-                .classed("selected2", true)
-                .style("opacity", 1);
-        } else {
-            COUNTRY2 = c.id;
-            d3.select(this).classed("selected2", true)
-            .style("opacity", 1)
-            .attr("fill", heatColor);
-
-            d3.selectAll(".country").filter(d => getContinent(d) == COUNTRY1).classed("selected1", true);
-        }
-        dispatcher.call("country2Selected", this, COUNTRY2);
-    } else {
-        if (COUNTRY1 != undefined) {
-            d3.selectAll(".country")
-                .classed("selected1", false)
-                .style("opacity", "0.6");
-
-            d3.selectAll(".country")
-                .filter(d => getContinent(d) == COUNTRY1)
-                .filter(d => getContinent(d) != COUNTRY2)
-                .attr("fill", heatColor)
-        }
-
-        if (d3.event.altKey) {
-            COUNTRY1 = getContinent(c);
-            d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c))
-                .filter(d => d.id != COUNTRY2)
-                .classed("selected1", true)
-                .attr("fill", heatColorContinent)
-                .style("opacity", 1);
-        } else {
-            COUNTRY1 = c.id;
-            d3.select(this).classed("selected1", true)
-            .style("opacity", 1)
-            .attr("fill", heatColor);
-
-            d3.selectAll(".country").filter(d => getContinent(d) == COUNTRY2).classed("selected2", true);
-        }
+    
+    if (!d3.event.shiftKey && !d3.event.altKey) {
+        COUNTRY1 = c.id;
         dispatcher.call("country1Selected", this, COUNTRY1);
     }
+    else if (!d3.event.shiftKey && d3.event.altKey) {
+        COUNTRY1 = getContinent(c);
+        dispatcher.call("country1Selected", this, COUNTRY1);
+    }
+    else if (d3.event.shiftKey && !d3.event.altKey) {
+        COUNTRY2 = c.id;
+        dispatcher.call("country2Selected", this, COUNTRY2);
+    }
+    else if (d3.event.shiftKey && d3.event.altKey) {
+        COUNTRY2 = getContinent(c);
+        dispatcher.call("country2Selected", this, COUNTRY2);
+    }
+    console.log("c1: " + COUNTRY1 + " | c2: " + COUNTRY2);
+    updateMap();
 }
 
 function hoverOn(c, forceContinent = false) {
@@ -230,10 +168,6 @@ function hoverOn(c, forceContinent = false) {
     }
 
     hoveredCountry = c;
-
-    if (forceContinent === true) {
-        d3.selectAll(".country").filter(d => getContinent(d) == getContinent(c)).style("opacity", 1);
-    }
 
     if (d3.event.altKey) {
         d3.selectAll(".country")
@@ -267,46 +201,30 @@ function hoverOff(c) {
 
 dispatcher.on("metricSelected", function(e) {
     mapMetric = e.metric_code;
-
-    mapSVG.selectAll(".country").attr("fill", heatColor);
-
-    if (isContinent(COUNTRY1)) {
-        mapSVG.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY1)
-        .filter( d => !(d.id == COUNTRY2))
-        .attr("fill", heatColorContinent);
-    }
-
-    if (isContinent(COUNTRY2)) {
-        mapSVG.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY2)
-        .filter( d => !(d.id == COUNTRY1))
-        .attr("fill", heatColorContinent);
-    }
+    updateMap();
 });
 
 dispatcher.on("yearSelected", function(e) {
     mapSVG.selectAll(".country").attr("fill", heatColor);
-
-    if (isContinent(COUNTRY1)) {
-        mapSVG.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY1)
-        .filter( d => !(d.id == COUNTRY2))
-        .attr("fill", heatColorContinent);
-    }
-
-    if (isContinent(COUNTRY2)) {
-        mapSVG.selectAll(".country")
-        .filter( d => getContinent(d) == COUNTRY2)
-        .filter( d => !(d.id == COUNTRY1))
-        .attr("fill", heatColorContinent);
-    }
+    updateMap();
 });
 
 function heatColor(c) {
     var color = d3.scaleQuantile()
                 .domain([1, 5])
                 .range(colors);
+
+    if (isContinent(COUNTRY1) && getContinent(c) == COUNTRY1) {
+        return heatColorContinent(c, color)
+    }
+
+    if (isContinent(COUNTRY2) && getContinent(c) == COUNTRY2) {
+        return heatColorContinent(c, color)
+    }
+
+    if (altPressed && c.id != COUNTRY1 && c.id != COUNTRY2) {
+        return heatColorContinent(c, color)
+    }
 
     var code = c.id;
 
@@ -319,11 +237,7 @@ function heatColor(c) {
     return color(+value);
 }
 
-function heatColorContinent(c) {
-    var color = d3.scaleQuantile()
-                .domain([1, 5])
-                .range(colors);
-
+function heatColorContinent(c, color) {
     var code = c.id;
 
     if (dataset[code] == undefined) return "#ccc";
@@ -345,4 +259,33 @@ function getContinent(c) {
 
 function isContinent(c) {
     return c.length > 3;
+}
+
+function updateMap() {
+    allCountries = mapSVG.selectAll(".country");
+
+    //treat colors
+    allCountries.transition().duration(700).attr("fill", heatColor);
+
+    //treat selections
+    if (COUNTRY1 || COUNTRY2) {
+        if (isContinent(COUNTRY1)) {
+            allCountries.filter(d => (getContinent(d) == COUNTRY1) && (d.id != COUNTRY2)).classed("selected1", true).classed("selected2", false);
+            allCountries.filter(d => getContinent(d) != COUNTRY1).classed("selected1", false);            
+        } else {
+            console.log("classing " + COUNTRY1);
+            
+            allCountries.filter(d => d.id == COUNTRY1).classed("selected1", true).classed("selected2", false);
+            allCountries.filter(d => d.id != COUNTRY1).classed("selected1", false);
+        }
+
+        if (isContinent(COUNTRY2)) {
+            allCountries.filter(d => (getContinent(d) == COUNTRY2) && (d.id != COUNTRY1)).classed("selected2", true).classed("selected1", false);
+            allCountries.filter(d => getContinent(d) != COUNTRY2).classed("selected2", false);            
+        } else {
+            allCountries.filter(d => d.id == COUNTRY2).classed("selected2", true).classed("selected1", false);
+            allCountries.filter(d => d.id != COUNTRY2).classed("selected2", false);
+        }
+    }
+
 }
