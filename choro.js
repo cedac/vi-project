@@ -184,7 +184,7 @@ function hoverOn(c, forceContinent = false) {
         .style("opacity", 0.6);
 
 
-        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id].OVERALL["" + YEAR] + "</p>");
+        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id][mapMetric]["" + YEAR] + "</p>");
         tooltip.style("visibility", "visible");
     }
 
