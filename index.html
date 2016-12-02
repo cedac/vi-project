@@ -1,9 +1,9 @@
 <html>
-
   <head>
-   <title>GDP</title>
-   <link rel="stylesheet" href="app.css">   
-   <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
+    <meta charset="utf-8" /> 
+    <title>GDP</title>
+    <link rel="stylesheet" href="app.css">   
+    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
    	<script src="http://d3js.org/topojson.v2.min.js"></script>
    
   </head>
@@ -55,7 +55,10 @@
       </div>
     </div> <!-- .topbar> -->
       <div class="wrapper">
-        <div id="div2" class="map"></div>
+        <div style="display: inline-block; max-width: 680px">
+          <div id="div2" class="map"></div>
+          <svg width="680" height="40" id="color-scale"></svg>
+        </div>
         <div id="div3" class="heatmap"></div>
         <div id="div5">
           <img width="700" src="linechart.png" alt="" height="280">
@@ -69,6 +72,7 @@
     <script src="choro.js"></script>
     <script src="heatmap.js"></script>
     <script src="cdotplot.js"></script>
+    <script src="colorscale.js"></script>
     <script src="jedi.js"></script>
     <script src="pasadinhas.js"></script>
 

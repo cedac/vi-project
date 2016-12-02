@@ -4,9 +4,6 @@ var world;
 var mapMetric = "OVERALL";
 const MAP_DIV_SELECTOR = "#DIV2";
 
-
-var colors = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3','#2166ac'].reverse();
-
 var mapSVG;
 var mapIdiomSVG;
 var projection;
@@ -77,7 +74,7 @@ function drawMap(error, data) {
 
     var color = d3.scaleQuantile()
     .domain([1, 5])
-    .range(colors);
+    .range(COLORS);
 
     var allContinents = [asia, europe, africa, america, oceania];
     
@@ -211,7 +208,7 @@ dispatcher.on("yearSelected", function(e) {
 function heatColor(c) {
     var color = d3.scaleQuantile()
                 .domain([1, 5])
-                .range(colors);
+                .range(COLORS);
 
     if (isContinent(COUNTRY1) && getContinent(c) == COUNTRY1) {
         return heatColorContinent(c, color)
@@ -227,7 +224,7 @@ function heatColor(c) {
 
     var code = c.id;
 
-    if (dataset[code] == undefined) return "#ccc";
+    if (dataset[code] == undefined) return "#333";
 
     var value = dataset[code][mapMetric]["" + YEAR];
 
