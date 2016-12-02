@@ -34,11 +34,12 @@ var x = d3.scaleTime().range([0, 410]),//lol wot
     y = d3.scaleLinear().range([220, 0]);//same
     z = d3.scaleOrdinal(d3.schemeCategory20);
 
-
+/* Comment for checkpoint layout display
 d3.json('dataset.json', data => {
     d = data
     d3_xy_chart(d.Europe);
 });
+*/
 
 function d3_xy_chart(pais){
     var lineData = parseLinechartData(pais);

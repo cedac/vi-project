@@ -102,7 +102,7 @@ var margin = {
         left: 150
     },
     width = 730 - margin.left - margin.right,
-    height = 430 - margin.top - margin.bottom,
+    height = 390 - margin.top - margin.bottom,
     gridSize = Math.floor(13), // CHANGED
     legendElementWidth = gridSize * 2,
     buckets = 8,
