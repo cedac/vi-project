@@ -7,7 +7,7 @@ d3.json('dataset.json', data => {
         //vis(parse(eval("d." + window.location.search.substring(1))))
     }
     sortMetrics(d[COUNTRY1])
-    heatmapDraw(d[COUNTRY1], d[COUNTRY2])
+    drawHeatmap(d[COUNTRY1], d[COUNTRY2])
 });
 
 function scale_metric(d, v, c) {

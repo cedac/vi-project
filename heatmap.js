@@ -21,7 +21,7 @@ dispatcher.on('metricLeave.heatmap', function(d) {
 })
 
 dispatcher.on('metricSelected.heatmap', function(d) {
-    drawHeatmapMetricAxis()
+    updateHeatmapMetricAxis()
 })
 
 dispatcher.on('metricEnter.cdot', function(d) {
@@ -54,7 +54,7 @@ dispatcher.on('country1Selected.heatmap', country => {
     sortMetrics(d[country])
     drawCountry(d[country], 1)
     drawCountry(d[COUNTRY2], 2)
-    drawHeatmapMetricAxis()
+    updateHeatmapMetricAxis()
     drawHeatmapLegend(d[country], d[COUNTRY2])
     drawDotplot(d[country], d[COUNTRY2])
 })
@@ -70,7 +70,7 @@ dispatcher.on('yearSelected.cdot', () => {
     sortMetrics(d[COUNTRY1])
     drawCountry(d[COUNTRY1], 1)
     drawCountry(d[COUNTRY2], 2)
-    drawHeatmapMetricAxis()
+    updateHeatmapMetricAxis()
     drawDotplot(d[COUNTRY1], d[COUNTRY2])
 })
 
@@ -101,7 +101,7 @@ var margin = {
         bottom: 100,
         left: 150
     },
-    width = 730 - margin.left - margin.right,
+    width = 700 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom,
     gridSize = 13
     legendElementWidth = gridSize * 2,
@@ -160,7 +160,6 @@ function drawCountry(country, n) {
         .attr("class", "bordered country" + n)
         .attr("width", gridSize)
         .attr("height", gridSize)
-        .attr("debug", d => d.metric_code + ":" + scale_metric_heatmap(d))
         .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d) })
         .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d) })
         .on('click', d => {
@@ -177,7 +176,6 @@ function drawCountry(country, n) {
         .style("fill", colorScale_scaleValue)
     
     squares
-        .attr("debug", d => d.metric_code + ":" + scale_metric_heatmap(d))
         .transition().duration(1000)
         .style("fill", colorScale_scaleValue)
         .transition().duration(1000)
@@ -213,42 +211,27 @@ function drawHeatmapLegend(c1, c2) {
         .remove()
 }
 
-function drawHeatmapMetricAxis() {
-    var axis = heatmapSVG.selectAll(".dayLabel")
+function updateHeatmapMetricAxis() {
+    heatmapSVG.selectAll(".metricLabel")
         .data(METRICS_ARRAY, d => d.code)
-        .filter(function(d) { return d.sort != -1 });
-
-    axis.enter()
-        .append("text")
-        .text(function(d) { return d.code; })
-        .attr("x", 0)
+        .transition().delay(1000).duration(1000)
         .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
-        .style("text-anchor", "end")
-        .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-        .attr("class", "dayLabel mono axis")
-
-    axis
         .style('fill', '')
         .filter(d => selected_metrics.indexOf(d.code) > -1)
         .style('fill', '#aa7700')
-
-    axis
-        .transition().delay(1000).duration(1000)
-        .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
 }
 
-function heatmapDraw(dataset, dataset2) {
-    var metricLabels = heatmapSVG.selectAll(".dayLabel")
-        .data(METRICS_ARRAY)
+function drawHeatmap(dataset, dataset2) {
+    var metricLabels = heatmapSVG.selectAll(".metricLabel")
+        .data(METRICS_ARRAY.filter(m => m.sort != -1))
         .enter().append("text")
-        .filter(function(d) { return d.sort != -1 })
         .text(function(d) { return d.name; })
         .attr("x", 0)
         .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
         .style("text-anchor", "end")
         .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-        .attr("class", "dayLabel mono axis");
-
+        .attr("class", "metricLabel mono axis");
+    
     drawCountry(dataset, 1)
     drawCountry(dataset2, 2)
     drawHeatmapLegend(dataset, dataset2)
