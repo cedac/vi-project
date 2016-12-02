@@ -35,8 +35,8 @@ d3.json("dataset.json", function (data) {
 function genChoroplethMap() {
 
     var margin = {top: 20, right: 90, bottom: 30, left: 50},
-        width = 710 - margin.left - margin.right,
-        height = 350 - margin.top - margin.bottom;
+        width = 680 - margin.left - margin.right,
+        height = 340 - margin.top - margin.bottom;
 
     mapIdiomSVG = d3.select(MAP_DIV_SELECTOR).append("svg")
                 .attr("width", width + margin.left + margin.right)
@@ -205,7 +205,6 @@ dispatcher.on("metricSelected", function(e) {
 });
 
 dispatcher.on("yearSelected", function(e) {
-    mapSVG.selectAll(".country").attr("fill", heatColor);
     updateMap();
 });
 

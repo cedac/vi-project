@@ -10,7 +10,7 @@ var cdot_diff_scale = (d, f) => DOTPLOT_X_PADDING + (f(cdot_scale_value1(d), cdo
 var cdot_min_scale = d => cdot_diff_scale(d, Math.min)
 var cdot_max_scale = d => cdot_diff_scale(d, Math.max)
 
-var cdot_y_scale = d => d.metric.sort * height / 25 + gridSize/2
+var cdot_y_scale = d => d.metric.sort * gridSize + gridSize/2
 
 var cdot_linediff_color = d => d.better ? COLORS[1] : COLORS[COLORS.length - 2]
 
@@ -119,7 +119,7 @@ function drawDotplot(c1, c2) {
         .exit()
         .remove()
 
-    const cdot_legend_y = 26.5 * gridSize
+    const cdot_legend_y = 27.5 * gridSize
     const cdot_legend_size = 3
     const axis_color = "#777"
 

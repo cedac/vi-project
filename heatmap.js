@@ -102,8 +102,8 @@ var margin = {
         left: 150
     },
     width = 730 - margin.left - margin.right,
-    height = 390 - margin.top - margin.bottom,
-    gridSize = Math.floor(13), // CHANGED
+    height = 395 - margin.top - margin.bottom,
+    gridSize = 13
     legendElementWidth = gridSize * 2,
     buckets = 8,
     years = ["08", "09", "10", "11", "12", "13", "14"];
@@ -154,7 +154,7 @@ function drawCountry(country, n) {
 
     squares.enter().append("rect")
         .attr("x", function(d) { return ((n == 2) ? COUNTRY_2_OFFSET : 0) + (d.year) * gridSize; })
-        .attr("y", function(d) { return (d.metric) * height / 25; })
+        .attr("y", function(d) { return (d.metric) * gridSize; })
         .attr("rx", 1)
         .attr("ry", 1)
         .attr("class", "bordered country" + n)
@@ -181,7 +181,7 @@ function drawCountry(country, n) {
         .transition().duration(1000)
         .style("fill", colorScale_scaleValue)
         .transition().duration(1000)
-        .attr("y", function(d) { return (d.metric) * height / 25; })
+        .attr("y", function(d) { return (d.metric) * gridSize; })
 
     squares.exit().remove();
 }
@@ -194,7 +194,7 @@ function drawHeatmapLegend(c1, c2) {
         .enter()
         .append('foreignObject')
         .attr('x', (d, i) => COUNTRY_2_OFFSET * i)
-        .attr('y', 26 * gridSize)
+        .attr('y', 27 * gridSize + 3)
         .attr('width', gridSize * 7)
         .attr('height', gridSize * 7)
         .attr('class', 'country-name mono')
@@ -222,7 +222,7 @@ function drawHeatmapMetricAxis() {
         .append("text")
         .text(function(d) { return d.code; })
         .attr("x", 0)
-        .attr("y", function(d, i) { return 1 + d.sort * height / 25; })
+        .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
         .style("text-anchor", "end")
         .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
         .attr("class", "dayLabel mono axis")
@@ -234,7 +234,7 @@ function drawHeatmapMetricAxis() {
 
     axis
         .transition().delay(1000).duration(1000)
-        .attr("y", function(d, i) { return 1 + d.sort * height / 25; })
+        .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
 }
 
 function heatmapDraw(dataset, dataset2) {
@@ -244,7 +244,7 @@ function heatmapDraw(dataset, dataset2) {
         .filter(function(d) { return d.sort != -1 })
         .text(function(d) { return d.name; })
         .attr("x", 0)
-        .attr("y", function(d, i) { return 1 + d.sort * height / 25; })
+        .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
         .style("text-anchor", "end")
         .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
         .attr("class", "dayLabel mono axis");
