@@ -9,34 +9,52 @@
   </head>
 
   <body>
-    <div class="topleft">Global Peace Index</div>
-    <div class="topcenter">
-      Select 1 or 2 countries! Or continents, if you prefer<br>
-      <select name="country1">
-        <option value="">Select...</option>
-        <option value="africa">Africa</option>
-        <option value="america">America</option>
-        <option value="europe">Europe</option>
-      </select>
-      <select name="country2">
-        <option value="">Select...</option>
-        <option value="africa">Africa</option>
-        <option value="america">America</option>
-        <option value="europe">Europe</option>
-      </select>
-      &nbsp;&nbsp;&nbsp;&nbsp;
-      <input type="checkbox" onchange="SORT_LOCK = this.checked"><label style="font-size: 9pt">Lock Sorting</label>
-    </div>
-    <div class="topright">
-      <div id="slider"><input class="bar" type="range" id="rangeinput" min="2008" max="2014" value="0" step="1" onchange="changeYear(this.value)" />
-      <span id="range">2008</span> <span><input type="button" value="Play Years" onclick="playYears(2008, 2014)" id="play"></span>
-      <script type="text/javascript">
-        function showValue(newValue) {
-	        document.getElementById("range").innerHTML=newValue;
-        }
-      </script></div>
-    </div>
-      <div id="wrapper">
+    <div class="topbar">
+      <div class="topleft">Global Peace Index</div>
+      <div class="topcenter">
+        <div class="col">
+          Select countries or continents...<br>
+          <select name="country1">
+            <option value="1">Just a long name...</option>
+          </select>
+          <select name="country2">
+            <option value="1">Just a long name...</option>          
+          </select>
+        </div>
+        <div class="col">
+          ..and metrics!<br>
+          <select name="country1">
+            <option value="1">Just a long name...</option>          
+          </select>
+          <select name="country1">
+            <option value="1">Just a long name...</option>          
+          </select>
+        </div>
+      </div>
+      <div class="topright">
+        <div id="slider">
+          <span>Year: </span><span id="range">2008</span>
+          <input class="bar" type="range" id="rangeinput" min="2008" max="2014" value="0" step="1" onchange="changeYear(this.value)" />
+          <br>
+          <input type="checkbox" onchange="SORT_LOCK = this.checked"> <label style="font-size: 9pt">Lock Sorting</label> |
+          <span><input type="button" value="Play Years" onclick="playYears(2008, 2014)" id="play"></span> |
+          <span><input type="button" value="Unselect metrics" onclick="unselect_metrics()" id="play"></span>
+          <script type="text/javascript">
+          function unselect_metrics() {
+            selected_metrics = []
+            heatmapSVG.selectAll(".country1, .country2").style('opacity', 1)
+            drawHeatmapMetricAxis()
+            heatmapSVG.selectAll(".dot1, .dot2, .linediff").style('opacity', 1)
+            heatmapSVG.selectAll(".dot1, .dot2").attr('r', 5)
+          }
+          function showValue(newValue) {
+            document.getElementById("range").innerHTML=newValue;
+          }
+          </script>
+        </div>
+      </div>
+    </div> <!-- .topbar> -->
+      <div class="wrapper">
         <br><br><br>
         <div id="div2" class="map"></div>
         <div id="div3" class="heatmap"></div>

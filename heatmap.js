@@ -242,7 +242,7 @@ function heatmapDraw(dataset, dataset2) {
         .data(METRICS_ARRAY)
         .enter().append("text")
         .filter(function(d) { return d.sort != -1 })
-        .text(function(d) { return d.code; })
+        .text(function(d) { return d.name; })
         .attr("x", 0)
         .attr("y", function(d, i) { return 1 + d.sort * height / 25; })
         .style("text-anchor", "end")
