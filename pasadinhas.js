@@ -118,5 +118,5 @@ function playYears(start, end) {
     document.getElementById("range").textContent = start
     dispatcher.call('yearSelected', this, start + '')
 
-    setTimeout(() => playYears(start + 1, end), 3000)
+    setTimeout(() => playYears(start + 1, end), start == 2008 ? 500 : 3000)
 }

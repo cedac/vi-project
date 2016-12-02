@@ -236,7 +236,7 @@ function heatColor(c) {
 function heatColorContinent(c, color) {
     var code = c.id;
 
-    if (dataset[code] == undefined) return "#ccc";
+    if (dataset[code] == undefined) return "#333";
 
     var cContinent = dataset[code].Continent;
 
