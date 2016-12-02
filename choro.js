@@ -158,7 +158,18 @@ function click(c) {
 }
 
 function hoverOn(c, forceContinent = false) {
-    if (c.id == COUNTRY1 || c.id == COUNTRY2) return;
+
+
+    if (c.id == COUNTRY1 || c.id == COUNTRY2) {
+        if (d3.event.altKey) {
+            tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)][mapMetric]["" + YEAR] + "</p>");
+            tooltip.style("visibility", "visible");
+        } else {
+            tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id][mapMetric]["" + YEAR] + "</p>");
+            tooltip.style("visibility", "visible");
+        }
+        return;
+    }
     if (countriesWithData.indexOf(c.id) == -1) {
         tooltip.style("visibility", "hidden");
         return;
