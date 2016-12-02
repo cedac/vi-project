@@ -54,7 +54,7 @@ function genChoroplethMap() {
     .on("keyup", onKeyUp);
 
 
-    projection = d3.geoMercator().translate([width/2, height/2+100]);
+    projection = d3.geoMercator().translate([width/2+65, height/2+70]).scale(110);
 
     path = d3.geoPath().projection(projection);
 

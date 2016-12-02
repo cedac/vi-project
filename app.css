@@ -142,17 +142,17 @@ text {
 
 .hovered {
   stroke: #ff9400 !important;
-  stroke-width: 1.5px !important;
+  stroke-width: 1px !important;
 }
 
 .selected1 {
   stroke: #b2df8a !important;
-  stroke-width: 1.5px !important;
+  stroke-width: 1px !important;
 }
 
 .selected2 {
   stroke: #FF0000 !important;
-  stroke-width: 1.5px !important;
+  stroke-width: 1px !important;
 }
 
 .country {
