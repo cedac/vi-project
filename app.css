@@ -176,6 +176,12 @@ text.mono, .mono {
   fill: #aaa;
 }
 
+.monoBig {
+  font-size: 12pt;
+  font-family: Consolas, courier;
+  fill: #ccc;
+}
+
 text.axis-workweek {
   fill: #000;
 }
@@ -206,4 +212,8 @@ text.axis-worktime {
   padding: 10px;
   border-radius: 5px;
   background: rgba(78, 74, 74, 0.60);
+}
+
+.map-label {
+   background: rgba(78, 74, 74, 0.60);
 }

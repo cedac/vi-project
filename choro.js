@@ -6,6 +6,7 @@ const MAP_DIV_SELECTOR = "#DIV2";
 
 var mapSVG;
 var mapIdiomSVG;
+var maplabelSVG;
 var projection;
 var path;
 
@@ -13,6 +14,10 @@ var countriesWithData;
 
 var hoveredCountry = undefined;
 var altPressed = false;
+
+ var margin = {top: 20, right: 90, bottom: 30, left: 50},
+        width = 680 - margin.left - margin.right,
+        height = 340 - margin.top - margin.bottom;
 
 var tooltip = d3.select("body")
         .append("div")
@@ -31,20 +36,17 @@ d3.json("dataset.json", function (data) {
 
 function genChoroplethMap() {
 
-    var margin = {top: 20, right: 90, bottom: 30, left: 50},
-        width = 680 - margin.left - margin.right,
-        height = 340 - margin.top - margin.bottom;
-
     mapIdiomSVG = d3.select(MAP_DIV_SELECTOR).append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-                .style("border", "1px solid #333")
+                .style("border", "1px solid #333");
+            
+    mapSVG = mapIdiomSVG
                 .call(d3.zoom()
                 .scaleExtent([1 / 2, 4])
-                .on("zoom", zoomed));
-            
-    mapSVG = mapIdiomSVG.append("g");
+                .on("zoom", zoomed))
+                .append("g");
 
     d3.select("body")
     .on("keydown", onKeyDown)
@@ -91,10 +93,39 @@ function drawMap(error, data) {
             .on("click", click);
     
     mapSVG.selectAll(".country").filter( d => d.id == COUNTRY1).classed("selected1", true);
-    mapSVG.selectAll(".country").filter( d => d.id == COUNTRY2).classed("selected2", true);    
+    mapSVG.selectAll(".country").filter( d => d.id == COUNTRY2).classed("selected2", true);
+
+    var labelText = METRICS[mapMetric].name + " | " + YEAR;
+
+    mapIdiomSVG.selectAll(".metricMapLabelText")
+            .data([mapMetric])
+            .enter()
+            .append("text")
+            .attr("class", "metricMapLabelText monoBig")
+            .style("text-anchor", "start")
+            .attr("x", "4pt")
+            .attr("y", "12pt")
+            .text(d => labelText);
+    
+    var textWidth = getTextWidth(labelText, "12pt Consolas")
+
+    mapIdiomSVG.insert("rect", "text")
+            .attr("width", textWidth + 10)
+            .attr("height", "16pt")
+            .classed("map-label", true)
+            .attr("fill" , "#333")
+            .attr("opacity", "0.6");
 
 
 }
+
+function getTextWidth(text, font) {
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+};
 
 function filterContinents(country, continent) {
     return dataset[country.id] ? dataset[country.id].Continent == continent : false
@@ -159,40 +190,48 @@ function click(c) {
 
 function hoverOn(c, forceContinent = false) {
 
-
-    if (c.id == COUNTRY1 || c.id == COUNTRY2) {
-        if (d3.event.altKey) {
-            tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)][mapMetric]["" + YEAR] + "</p>");
-            tooltip.style("visibility", "visible");
-        } else {
-            tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id][mapMetric]["" + YEAR] + "</p>");
-            tooltip.style("visibility", "visible");
-        }
-        return;
-    }
     if (countriesWithData.indexOf(c.id) == -1) {
         tooltip.style("visibility", "hidden");
         return;
     }
 
-    hoveredCountry = c;
+    var isContinent;
 
-    if (d3.event.altKey) {
-        d3.selectAll(".country")
-        .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
-        .filter(d => (getContinent(d) != getContinent(c)))
-        .style("opacity", 0.6);
-
-        tooltip.html("<p>" + getContinent(c) + "</p><p>" + dataset[getContinent(c)][mapMetric]["" + YEAR] + "</p>");
-        tooltip.style("visibility", "visible");
-        
+    if (c.id == COUNTRY1 || c.id == COUNTRY2) {
+        if (d3.event.altKey) {
+            isContinent = true;
+        } else {
+            isContinent = false;
+        }
     } else {
-        d3.selectAll(".country")
-        .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
-        .style("opacity", 0.6);
+        hoveredCountry = c;
 
+        if (d3.event.altKey) {
+            d3.selectAll(".country")
+            .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
+            .filter(d => (getContinent(d) != getContinent(c)))
+            .style("opacity", 0.6);
 
-        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + dataset[c.id][mapMetric]["" + YEAR] + "</p>");
+            isContinent = true;        
+        } else {
+            d3.selectAll(".country")
+            .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
+            .style("opacity", 0.6);
+
+            isContinent = false;
+        }
+
+    }
+
+    if (isContinent) {
+        var value = dataset[getContinent(c)][mapMetric]["" + YEAR].toFixed(2);
+        value = (value == -1 ? "No information" : value);
+        tooltip.html("<p>" + getContinent(c) + "</p><p>" + value + "</p>");
+        tooltip.style("visibility", "visible");
+    } else {
+        var value = dataset[c.id][mapMetric]["" + YEAR].toFixed(2);
+        value = (value == -1 ? "No information" : value);
+        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + value + "</p>");
         tooltip.style("visibility", "visible");
     }
 
@@ -270,6 +309,15 @@ function isContinent(c) {
 
 function updateMap() {
     allCountries = mapSVG.selectAll(".country");
+    label = mapIdiomSVG.selectAll(".metricMapLabelText");
+    labelBox = mapIdiomSVG.selectAll(".map-label");
+
+    //treat label
+    var labelText = METRICS[mapMetric].name + " | " + YEAR;
+    label.text(function() { return labelText;});
+    labelBox.attr("width", getTextWidth(labelText, "12pt Consolas") + 10);
+
+
 
     //treat colors
     allCountries.transition().duration(700).attr("fill", heatColor);
@@ -294,5 +342,7 @@ function updateMap() {
             allCountries.filter(d => d.id != COUNTRY2).classed("selected2", false);
         }
     }
+
+
 
 }
