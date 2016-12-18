@@ -8,6 +8,7 @@ d3.json('dataset.json', data => {
     }
     sortMetrics(d[COUNTRY1])
     drawHeatmap(d[COUNTRY1], d[COUNTRY2])
+    drawScatterplot('UNEMPLOYMENT', 'GDPPC')
 });
 
 function scale_metric(d, v, c) {

@@ -65,6 +65,15 @@ select, input, button {
   font-size: 11pt;
 }
 
+@media 
+(-webkit-min-device-pixel-ratio: 1.25), 
+(min-resolution: 200dpi){ 
+    /* Retina-specific stuff here */
+    .topright {
+      width: 35% !important;
+    }
+}
+
 
 #slider {
 	width: 100%;
@@ -217,3 +226,17 @@ text.axis-worktime {
 .map-label {
    background: rgba(78, 74, 74, 0.60);
 }
+
+.axis line {
+  fill: none;
+  stroke: #ccc;
+  shape-rendering: crispEdges;
+}
+
+.axis path{
+  stroke: #ccc;
+}
+
+.axis text{
+  fill: #ccc;
+} 
