@@ -23,4 +23,4 @@ COLORS = ['#b2182b','#d6604d','#f4a582','#fddbc7','#d1e5f0','#92c5de','#4393c3',
 DISTINCT_COLOR = ['#b2df8a', '#a6cee3']
 var distinct_color = i => DISTINCT_COLOR[i]
 
-var dispatcher = d3.dispatch("valueEnter", "metricEnter", "metricLeave", "yearEnter", "countryEnter", "country1Selected", "country2Selected", "metricSelected", "yearSelected")
+var dispatcher = d3.dispatch("valueEnter", "metricEnter", "metricLeave", "yearEnter", "countryEnter", "country1Selected", "country2Selected", "metricSelected", "metricUnselected", "yearSelected")

@@ -170,7 +170,7 @@ function drawCountry(country, n) {
                 dispatcher.call('metricSelected', this, d)
             } else {
                 selected_metrics.push(code)
-                dispatcher.call('metricSelected', this, d)
+                dispatcher.call('metricUnselected', this, d)
             }
         })
         .style("fill", colorScale_scaleValue)
