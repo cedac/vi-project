@@ -240,3 +240,15 @@ text.axis-worktime {
 .axis text{
   fill: #ccc;
 } 
+
+.lineLegend {
+  color: white;
+}
+
+.faded {
+  opacity: 0.2 !important;
+}
+
+.selectedLabel {
+  fill: #aa7700 !important;
+}

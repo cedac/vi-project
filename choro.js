@@ -15,9 +15,9 @@ var countriesWithData;
 var hoveredCountry = undefined;
 var altPressed = false;
 
- var margin = {top: 20, right: 90, bottom: 30, left: 50},
-        width = 680 - margin.left - margin.right,
-        height = 340 - margin.top - margin.bottom;
+var margin = {top: 20, right: 90, bottom: 30, left: 50},
+    width = 680 - margin.left - margin.right,
+    height = 340 - margin.top - margin.bottom;
 
 var tooltip = d3.select("body")
         .append("div")
