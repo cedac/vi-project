@@ -95,14 +95,14 @@ function parseHeatmapData(country, year) {
     return data;
 }
 
-var margin = {
+var hm_margin = {
         top: 20,
         right: 0,
         bottom: 100,
         left: 150
     },
-    width = 700 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom,
+    hm_width = 700 - hm_margin.left - hm_margin.right,
+    hm_height = 400 - hm_margin.top - hm_margin.bottom,
     gridSize = 13
     legendElementWidth = gridSize * 2,
     buckets = 8,
@@ -111,10 +111,10 @@ var margin = {
     //years = ["'08", "", "", "", "", "", "'14"];
 
 var heatmapSVG = d3.select(HEATMAP_DIV_SELECTOR).append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", hm_width + hm_margin.left + hm_margin.right)
+    .attr("height", hm_height + hm_margin.top + hm_margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + hm_margin.left + "," + hm_margin.top + ")");
 
 var yearsLabel = heatmapSVG.selectAll(".timeLabel")
     .data(years)

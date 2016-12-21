@@ -1,7 +1,10 @@
 
-var sp_margin = {top: 20, right: 20, bottom: 40, left: 60}
-var sp_width = 460 - margin.left - margin.right
-var sp_height = 450 - margin.top - margin.bottom
+var sp_margin = {top: 15, right: 20, bottom: 35, left: 60}
+
+//var sp_width = 460 - margin.left - margin.right
+//var sp_height = 450 - margin.top - margin.bottom
+var sp_width = 280
+var sp_height = 280
 
 var sp_xValue = d => d.x_5
 var sp_xScale = d3.scaleLinear().range([0, sp_width]).domain([5,1])

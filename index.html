@@ -36,19 +36,26 @@
           </script>
         </div>
       </div>
-    </div> <!-- .topbar> -->
+    </div> <!-- </.topbar> -->
       <div class="wrapper">
-        <div style="display: inline-block; max-width: 680px">
-          <div id="div2" class="map"></div>
-          <svg width="680" height="40" id="color-scale"></svg>
+        <div class="row">
+          <div class="width50">
+            <div id="div3" class="heatmap"></div>
+          </div>
+          <div class="width50">
+            <div id="div2" class="map"></div>
+            <svg width="680" height="40" id="color-scale"></svg>
+          </div>
         </div>
-        <div id="div3" class="heatmap"></div>
-        <div class="linechart"></div>
-        <div class="scatterplot"></div>
-        <div id="div4" class="linechart"></div>
+        <div class="row">
+          <div class="width30">
+            <div class="scatterplot"></div>
+          </div>
+          <div class="width70">
+            <div id="div4" class="linechart"></div>
+          </div>
+        </div>
       </div>
-    
-
 
     <script src="lib/d3/d3.v4.min.js" charset="utf-8"></script>
     <script src="lib/d3/topojson.v2.min.js"></script>

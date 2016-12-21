@@ -10,6 +10,29 @@ body {
   background: #111;
 }
 
+.row {
+    margin-top: -8px;
+}
+
+.width50 {
+  width: calc(50% - 5px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.width70 {
+  width: calc(70% - 7px - 90px);
+  display: inline-block;
+  vertical-align: top;
+}
+
+.width30 {
+  width: calc(30% - 3px);
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 90px;
+}
+
 #div5 {
   width: 100%;
   margin-top: 30px;
@@ -21,7 +44,8 @@ select, input, button {
 
 .wrapper {
   padding: 10px;
-  margin-top: 5px;
+  margin-top: -6px;
+  padding-bottom: 0px;
 }
 
 .topbar {
@@ -208,6 +232,8 @@ text.axis-worktime {
 
 .map {
   display: inline-block;
+  margin-top: 25px;
+  margin-bottom: -1px;
 }
 
 .heatmap {

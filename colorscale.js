@@ -3,7 +3,7 @@ var colorScale = d3.scaleQuantile()
     .range(COLORS);
 
 const legendElementWidth = 680/8
-const scale_y_padding = 10
+const scale_y_padding = 5
 
 var legend = d3.select('#color-scale')
     .selectAll(".color-scale")
@@ -25,9 +25,10 @@ element
 element
     .append("text")
     .attr("class", "mono")
+    .style("fill", 'black')
     .text(function(d) { return "≥ " + d.toFixed(2); })
-    .attr("x", function(d, i) { return legendElementWidth * i; })
-    .attr("y", 25 + scale_y_padding);
+    .attr("x", function(d, i) { return legendElementWidth * i + 5; })
+    .attr("y", 10 + scale_y_padding);
 
 legend
     .exit()
