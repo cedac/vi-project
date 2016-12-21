@@ -53,6 +53,7 @@ function parseMetricsForCountry (metric, country) {
 
 d3.json("dataset.json", function (data) {
     dataset = data;
+    lineChartMetrics.push({"country": "PRT", "id": "OVERALL", "color": rentColor(), "data": parseMetricsForCountry("OVERALL", "PRT")});    
     genMultiLineChart();
 })
 
@@ -106,7 +107,7 @@ function genMultiLineChart(){
       .attr("fill", "#000")
       .text("Value");
     
-    drawLineForMetric("PRT", dummyMetric1);
+    drawLines("PRT", dummyMetric1);
 
     drawLineLegend();
 
@@ -162,7 +163,9 @@ function drawLineLegend() {
 
 }
 
-function drawLineForMetric(country, metric) {
+function drawLines(country, metric) {
+    console.log(metric)
+
      var x = d3.scaleTime()
     .rangeRound([0, lineChartWidth]);
 
@@ -259,16 +262,22 @@ function returnColor(color) {
     availableColors.push(color);
 }
 
-dispatcher.on("metricSelected.linechart", function(e) { //debugger
+dispatcher.on("metricSelected.linechart", function(code) {
     console.log(lineChartMetrics);
-    var index = metricIndex(e.metric_code);
-    if (index != -1) {
-        returnColor(lineChartMetrics[index].color)
-        lineChartMetrics.splice(index, 1);
-    } else {
-        lineChartMetrics.push({"country": "PRT", "id": e.metric_code, "color": rentColor(), "data": parseMetricsForCountry(e.metric_code, "PRT")});    
-    }
-    drawLineForMetric("PRT", e.metric_code);
+    var index = metricIndex(code);
+    lineChartMetrics.push({"country": "PRT", "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, "PRT")});    
+    drawLines("PRT", code);
+    drawLineLegend();
+});
+
+dispatcher.on("metricUnselected.linechart", function(code) {
+    console.log(lineChartMetrics);
+    var index = metricIndex(code);
+
+    returnColor(lineChartMetrics[index].color)
+    lineChartMetrics.splice(index, 1);
+
+    drawLines("PRT", code);
     drawLineLegend();
 });
 

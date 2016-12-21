@@ -10,7 +10,7 @@ const SCATTERPLOT_QUADRANT_COLOR = 'rgba(180,180,180,0.05)'
 
 const VALID_RANGE = v => v >= 1 && v <= 5
 
-const NOVALUE_COLOR = '#222'
+const NOVALUE_COLOR = '#777'
 
 var YEAR = "2008"
 var COUNTRY1 = "PRT"

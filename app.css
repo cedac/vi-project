@@ -222,6 +222,9 @@ text.axis-worktime {
   padding: 10px;
   border-radius: 5px;
   background: rgba(78, 74, 74, 0.60);
+  font-size: 9pt;
+  font-family: Consolas, courier;
+  fill: #ccc;
 }
 
 .map-label {

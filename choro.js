@@ -223,18 +223,41 @@ function hoverOn(c, forceContinent = false) {
 
     }
 
+    var value;
+    var identification;
+
     if (isContinent) {
-        var value = dataset[getContinent(c)][mapMetric]["" + YEAR].toFixed(2);
-        value = (value == -1 ? "No information" : value);
-        tooltip.html("<p>" + getContinent(c) + "</p><p>" + value + "</p>");
-        tooltip.style("visibility", "visible");
+        value = dataset[getContinent(c)][mapMetric]["" + YEAR].toFixed(2);
+        identification = getContinent(c);
     } else {
-        var value = dataset[c.id][mapMetric]["" + YEAR].toFixed(2);
-        value = (value == -1 ? "No information" : value);
-        tooltip.html("<p>" + dataset[c.id].name + "</p><p>" + value + "</p>");
-        tooltip.style("visibility", "visible");
+        value = dataset[c.id][mapMetric]["" + YEAR].toFixed(2);
+        identification = dataset[c.id].name;
     }
 
+    value = (value == -1 ? "No information" : value);
+
+    if (mapMetric == "INTERNET" || mapMetric == "UNEMPLOYMENT") {
+        tooltip.html(
+            "<h3>" + identification + "</h3>" + 
+            "<h4>" + METRICS[mapMetric].name + "</h4>"+ 
+            "<p>Value: " + value + "%</p>" +
+            "<p>Normalized Value: " + METRICS[mapMetric].scale(value).toFixed(2) + "</p>");
+    } 
+    else if(mapMetric == "GDPPC") {
+        tooltip.html(
+                "<h3>" + identification + "</h3>" + 
+                "<h4>" + METRICS[mapMetric].name + "</h4>" + 
+                "<p>Value: " + value + (value == "No information" ? "" : " $/capita") + "</p>" +
+                "<p>Normalized Value: " + (value == "No information" ? value : METRICS[mapMetric].scale(value).toFixed(2)) + "</p>");
+    } 
+    else {
+        tooltip.html(
+                "<h3>" + identification + "</h3>" + 
+                "<h4>" + METRICS[mapMetric].name + "</h4>"+ 
+                "<p>Value: " + value + " $/capita</p>");
+    }
+    
+    tooltip.style("visibility", "visible");
 }
 
 function hoverOff(c) {
@@ -246,8 +269,8 @@ function hoverOff(c) {
 
 }
 
-dispatcher.on("metricSelected", function(e) {
-    mapMetric = e.metric_code;
+dispatcher.on("metric1Selected", function(e) {
+    mapMetric = e;
     updateMap();
 });
 
@@ -280,6 +303,10 @@ function heatColor(c) {
 
     value = METRICS[mapMetric].scale ? METRICS[mapMetric].scale(value) : value;
 
+    if (!VALID_RANGE(value)) {
+        return NOVALUE_COLOR;
+    }
+
     return color(+value);
 }
 
@@ -291,6 +318,8 @@ function heatColorContinent(c, color) {
     var cContinent = dataset[code].Continent;
 
     var value = dataset[cContinent][mapMetric]["" + YEAR];
+
+    value = METRICS[mapMetric].scale ? METRICS[mapMetric].scale(value) : value;
 
     return color(+value);
 }
