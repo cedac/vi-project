@@ -1,5 +1,5 @@
 
-var sp_margin = {top: 20, right: 20, bottom: 30, left: 40}
+var sp_margin = {top: 20, right: 20, bottom: 40, left: 60}
 var sp_width = 460 - margin.left - margin.right
 var sp_height = 450 - margin.top - margin.bottom
 
@@ -12,6 +12,8 @@ var sp_yValue = d => d.y_5
 var sp_yScale = d3.scaleLinear().range([sp_height, 0]).domain([5,1])
 var sp_yMap = d => sp_yScale(sp_yValue(d))
 var sp_yAxis = d3.axisLeft().scale(sp_yScale)
+
+const sp_colorScale = d => COLOR_SCALE((d.x_5 + d.y_5) / 2)
 
 var sp_svg = d3.select(".scatterplot")
     .append("svg")
@@ -26,7 +28,7 @@ var sp_tooltip = d3.select("body")
         .style("opacity", 0);
 
 function chooseColor(c) {
-    return COLOR_SCALE((c.x_5 + c.y_5) / 2)
+    return sp_colorScale(c)
     switch (d[c].Continent) {
         case 'Europe':
             return 'rgba(20,30,200,0.8)'
@@ -64,8 +66,6 @@ function parseScatterplotData(mx, my) {
 }
 
 function drawScatterplot(mx, my) {
-    data = parseScatterplotData(mx, my)
-
     sp_svg.append('line')
         .attr('y1', sp_yScale(3))
         .attr('y2', sp_yScale(3))
@@ -80,70 +80,58 @@ function drawScatterplot(mx, my) {
         .attr('x2', sp_xScale(3))
         .style('stroke', SCATTERPLOT_QUADRANT_COLOR)
 
+    sp_svg.append("g")
+      .attr("class", "x axis sp-x-axis")
+      .attr("transform", "translate(0," + sp_height + ")")
+      .call(sp_xAxis)
+    .append("text")
+      .attr("class", "label sp-x-label")
+      .attr("x", sp_width/2)
+      .attr("y", 32)
+      .style("text-anchor", "middle")
+      .text(METRICS[mx].name);
+
+    sp_svg.append("g")
+      .attr("class", "y axis sp-y-axis")
+      .call(sp_yAxis)
+    .append("text")
+      .attr("class", "label sp-y-label")
+      .attr("transform", "translate(-40, "+sp_height/2+") rotate(-90)")
+      //.attr("y", sp_height/2)
+      //.attr("x", -32)
+      .attr("dy", ".71em")
+      .style("text-anchor", "middle")
+      .text(METRICS[my].name);
+
+      updateScatterplot(mx, my)
+}
+
+function updateScatterplot(mx, my) {
+    data = parseScatterplotData(mx, my)
+
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
         .enter()
         .filter(d => VALID_RANGE(d.x_5) && VALID_RANGE(d.y_5))
         .append("circle")
-        .attr('debug', d => [d.x_5, d.y_5])
         .attr("class", "dot")
         .attr("r", 4)
         .attr("cx", sp_xMap)
         .attr("cy", sp_yMap)
         .style("fill", d => d.color)
         .style('opacity', '0.85')
+        .style('stroke-width', '2px')
 
-    
-
-    sp_svg.append("g")
-      .attr("class", "x axis sp-x-axis")
-      .attr("transform", "translate(0," + sp_height + ")")
-      .call(sp_xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", sp_width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text(METRICS[mx].name);
-
-    sp_svg.append("g")
-      .attr("class", "y axis sp-x-axis")
-      .call(sp_yAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(METRICS[my].name);
-}
-
-function updateScatterplotMetric(data, cxy, xyMap) {
-    sp_svg.selectAll(".dot")
-        .data(data, d => d.id)
-        .transition()
-        .duration(1000)
-        .attr(cxy, xyMap)
-}
-
-function updateScatterplotX(mx, my) {
-    data = parseScatterplotData(mx, my)
-    updateScatterplotMetric(data, 'cx', sp_xMap)
-}
-
-function updateScatterplotY(mx, my) {
-    data = parseScatterplotData(mx, my)
-    updateScatterplotMetric(data, 'cy', sp_yMap)
-}
-
-function updateScatterplot(mx, my) {
-    data = parseScatterplotData(mx, my)
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
         .transition()
         .duration(1000)
         .attr('cx', sp_xMap)
         .attr('cy', sp_yMap)
+        .style('fill', sp_colorScale)
+
+    sp_svg.select('.sp-x-label').text(METRICS[mx].name)
+    sp_svg.select('.sp-y-label').text(METRICS[my].name)
 }
 
 function sp_highlightSelectedCountries() {
@@ -151,7 +139,7 @@ function sp_highlightSelectedCountries() {
         .data(data, d => d.id)
         .transition()
         .duration(500)
-        .style('fill', d => d.color)
+        .style('stroke', 'none')
 
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
@@ -171,11 +159,11 @@ function sp_highlightSelectedCountries() {
 }
 
 dispatcher.on('metric1Selected.scatterplot', m => {
-    updateScatterplotX(m, METRIC2)
+    updateScatterplot(m, METRIC2)
 })
 
 dispatcher.on('metric2Selected.scatterplot', m => {
-    updateScatterplotY(METRIC1, m)
+    updateScatterplot(METRIC1, m)
 })
 
 dispatcher.on('yearSelected.scatterplot', y => {

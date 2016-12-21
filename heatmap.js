@@ -4,7 +4,7 @@ var UNIQUE_ID = 0
 dispatcher.on('metricEnter.heatmap', function(d) {
     heatmapSVG.selectAll(".country1, .country2")
         .style('opacity', 1)
-        .filter(e => e.metric !== d.metric && selected_metrics.indexOf(e.metric_code) == -1)
+        .filter(e => e.metric_code !== d && selected_metrics.indexOf(e.metric_code) == -1)
         .style('opacity', FADE_OPACITY)
 })
 
@@ -28,7 +28,7 @@ dispatcher.on('metricEnter.cdot', function(d) {
     heatmapSVG.selectAll(".dot1, .dot2, .linediff")
         .attr('r', 5)
         .style('opacity', 1)
-        .filter(e => e.code !== d.metric_code && selected_metrics.indexOf(e.code) == -1)
+        .filter(e => e.code !== d && selected_metrics.indexOf(e.code) == -1)
         .attr('r', 3)
         .style('opacity', FADE_OPACITY)
 })
@@ -163,19 +163,9 @@ function drawCountry(country, n) {
         .attr("class", "bordered country" + n)
         .attr("width", gridSize)
         .attr("height", gridSize)
-        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d) })
-        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d) })
-        .on('click', d => {
-            var code = d.metric_code
-            var index = selected_metrics.indexOf(code) 
-            if (index > -1) {
-                selected_metrics.splice(index, 1)
-                dispatcher.call('metricUnselected', this, d)
-            } else {
-                selected_metrics.push(code)
-                dispatcher.call('metricSelected', this, d)
-            }
-        })
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.metric_code) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.metric_code) })
+        .on('click', d => heatmap_cdot_onClick(d.metric_code))
         .style("fill", colorScale_scaleValue)
     
     squares
@@ -233,11 +223,32 @@ function drawHeatmap(dataset, dataset2) {
         .attr("y", function(d, i) { return 1 + d.sort * gridSize; })
         .style("text-anchor", "end")
         .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-        .attr("class", "metricLabel mono axis");
+        .attr("class", "metricLabel mono axis")
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.code) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.code) })
     
     drawCountry(dataset, 1)
     drawCountry(dataset2, 2)
     drawHeatmapLegend(dataset, dataset2)
 
     drawDotplot(dataset, dataset2)
+}
+
+function unselect_metrics() {
+    selected_metrics = []
+    heatmapSVG.selectAll(".country1, .country2").style('opacity', 1)
+    updateHeatmapMetricAxis()
+    heatmapSVG.selectAll(".dot1, .dot2, .linediff").style('opacity', 1)
+    heatmapSVG.selectAll(".dot1, .dot2").attr('r', 5)
+}
+
+function heatmap_cdot_onClick(code) {
+    var index = selected_metrics.indexOf(code) 
+    if (index > -1) {
+        selected_metrics.splice(index, 1)
+        dispatcher.call('metricUnselected', this, code)
+    } else {
+        selected_metrics.push(code)
+        dispatcher.call('metricSelected', this, code)
+    }
 }

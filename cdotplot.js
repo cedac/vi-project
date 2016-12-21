@@ -14,6 +14,13 @@ var cdot_y_scale = d => d.metric.sort * gridSize + gridSize/2
 
 var cdot_linediff_color = d => d.better ? COLORS[1] : COLORS[COLORS.length - 2]
 
+var cdot_valid_ranges = d => VALID_RANGE(cdot_scale_value1(d)) && VALID_RANGE(cdot_scale_value2(d))
+var cdot_valid_range_v1 = d => VALID_RANGE(cdot_scale_value1(d))
+var cdot_valid_range_v2 = d => VALID_RANGE(cdot_scale_value2(d))
+
+var cdot_can_highlight = d => selected_metrics.length == 0 || selected_metrics.indexOf(d.code) > -1
+var cdot_opacity = d => cdot_can_highlight(d) ? 1 : FADE_OPACITY
+
 function parseDotplotData(c1, c2) {
     var data = []
     for (metric in c1) {
@@ -52,22 +59,38 @@ function drawDotplot(c1, c2) {
 
     lineDiffSelection
         .enter()
+        .filter(cdot_valid_ranges)
         .append('line')
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.code) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.code) })
+        .on("click", d => heatmap_cdot_onClick(d.code))
         .attr('y1', cdot_y_scale)
         .attr('y2', cdot_y_scale)
         .attr('x1', cdot_min_scale)
         .attr('x2', cdot_max_scale)
         .attr('class', 'linediff')
         .style('stroke', cdot_linediff_color)
+        .style('opacity', 0)
+        .transition().duration(1000)
+        .transition().duration(1000)
+        .style('opacity', cdot_opacity)
 
     lineDiffSelection
+        .filter(cdot_valid_ranges)    
         .transition().duration(1000)
+        .style('opacity', cdot_opacity)
         .attr('x1', cdot_min_scale)
         .attr('x2', cdot_max_scale)
         .style('stroke', cdot_linediff_color)
         .transition().duration(1000)        
         .attr('y1', cdot_y_scale)
         .attr('y2', cdot_y_scale)
+
+    lineDiffSelection
+        .filter(d => !cdot_valid_ranges(d))
+        .transition().duration(1000)
+        .style('opacity', 0)
+        .remove()
 
     lineDiffSelection
         .exit()
@@ -78,19 +101,35 @@ function drawDotplot(c1, c2) {
     
     dot1Selection
         .enter()
+        .filter(cdot_valid_range_v1) 
         .append('circle')
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.code) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.code) })
+        .on("click", d => heatmap_cdot_onClick(d.code))
         .attr('cx', cdot_x1_scale)
         .attr('cy', cdot_y_scale)
         .attr('r', 5)
         .attr('class', 'dot1')
         .style('stroke', '#111')
         .style('fill', '#b2df8a')
+        .style('opacity', 0)
+        .transition().duration(1000)                        
+        .transition().duration(1000)
+        .style('opacity', cdot_opacity)
 
     dot1Selection
+        .filter(cdot_valid_range_v1)            
         .transition().duration(1000)
+        .style('opacity', cdot_opacity)        
         .attr('cx', cdot_x1_scale)
         .transition().duration(1000)        
         .attr('cy', cdot_y_scale)
+
+    dot1Selection
+        .filter(d => !cdot_valid_range_v1(d))
+        .transition().duration(1000)
+        .style('opacity', 0)
+        .remove()   
 
     dot1Selection
         .exit()
@@ -101,19 +140,35 @@ function drawDotplot(c1, c2) {
 
     dot2Selection
         .enter()
+        .filter(cdot_valid_range_v2)
         .append('circle')
+        .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.code) })
+        .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.code) })   
+        .on("click", d => heatmap_cdot_onClick(d.code))
         .attr('cx', cdot_x2_scale)
         .attr('cy', cdot_y_scale)
         .attr('r', 5)
         .attr('class', 'dot2')
         .style('stroke', '#111')
         .style('fill', '#a6cee3')
+        .style('opacity', 0) 
+        .transition().duration(1000)
+        .transition().duration(1000)
+        .style('opacity', cdot_opacity)
 
     dot2Selection
+        .filter(cdot_valid_range_v2)        
         .transition().duration(1000)
+        .style('opacity', cdot_opacity)        
         .attr('cx', cdot_x2_scale)
         .transition().duration(1000)        
         .attr('cy', cdot_y_scale)
+
+    dot2Selection
+        .filter(d => !cdot_valid_range_v2(d))
+        .transition().duration(1000)
+        .style('opacity', 0)
+        .remove()   
 
     dot2Selection
         .exit()

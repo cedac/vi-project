@@ -73,3 +73,6 @@ function initCountryDropdowns(d) {
         dispatcher.call("metric2Selected", m2, METRIC2)
     }
 })()
+
+dispatcher.on('country1Selected.dropdown', c => c1.value = c)
+dispatcher.on('country2Selected.dropdown', c => c2.value = c)

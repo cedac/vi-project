@@ -29,13 +29,6 @@
           <span><input type="button" value="Play Years" onclick="playYears(2008, 2014)" id="play"></span> |
           <span><input type="button" value="Unselect metrics" onclick="unselect_metrics()" id="play"></span>
           <script type="text/javascript">
-          function unselect_metrics() {
-            selected_metrics = []
-            heatmapSVG.selectAll(".country1, .country2").style('opacity', 1)
-            drawHeatmapMetricAxis()
-            heatmapSVG.selectAll(".dot1, .dot2, .linediff").style('opacity', 1)
-            heatmapSVG.selectAll(".dot1, .dot2").attr('r', 5)
-          }
           function showValue(newValue) {
             document.getElementById("range").innerHTML=newValue;
           }
