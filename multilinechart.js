@@ -27,6 +27,9 @@ var lineSelectedMetrics = [];
 var genColorIndex = 0;
 var availableColors = ['#7fc97f','#beaed4','#fdc086','#ffff99','#386cb0','#f0027f','#bf5b17'];
 
+var currentMetric1;
+var currentMetric2;
+
 var lineChartTooltip = d3.select("body")
         .append("div")
         .classed("map-tooltip", true)
@@ -53,7 +56,12 @@ function parseMetricsForCountry (metric, country) {
 
 d3.json("dataset.json", function (data) {
     dataset = data;
-    lineChartMetrics.push({"country": "PRT", "id": "OVERALL", "color": rentColor(), "data": parseMetricsForCountry("OVERALL", "PRT")});    
+    lineChartMetrics.push({"country": COUNTRY1, "id": METRIC1, "color": rentColor(), "data": parseMetricsForCountry(METRIC1, COUNTRY1)});    
+    lineChartMetrics.push({"country": COUNTRY1, "id": METRIC2, "color": rentColor(), "data": parseMetricsForCountry(METRIC2, COUNTRY1)});    
+    
+    currentMetric1 = METRIC1;
+    currentMetric2 = METRIC2;
+    
     genMultiLineChart();
 })
 
@@ -130,13 +138,13 @@ function drawLineLegend() {
                         .on("mouseover", legendHoverOn)
                         .on("mouseout", legendHoverOff)
                         .on("click", legendClick)
-                        .transition().duration(500)
-                        .style("opacity", "1");
+                        .transition().duration(700)
+                        .style("opacity", "1")
 
     lineLegendSquaresSVG.transition().duration(700)
                         .attr("y", d => metricIndex(d.id) * 17);
 
-    lineLegendSquaresSVG.exit().transition().duration(700).style("opacity", "0").remove();
+    lineLegendSquaresSVG.exit().transition().duration(300).style("opacity", "0").remove();
 
 
     lineLegendLabelsSVG = lineChartSVG.selectAll(".lineLegend")
@@ -151,16 +159,31 @@ function drawLineLegend() {
                         .on("mouseover", legendHoverOn)
                         .on("mouseout", legendHoverOff)
                         .on("click", legendClick)                        
-                        .transition().duration(500)
+                        .transition().duration(700)
                         .style("opacity", "1")
                         .attr("class", "lineLegend mono");
                     
     lineLegendLabelsSVG .transition().duration(700)
                         .attr("y", d => metricIndex(d.id) * 17 + lineLegendSquare * 0.75);
 
-    lineLegendLabelsSVG.exit().transition().duration(700).style("opacity", "0").remove();
+    lineLegendLabelsSVG.exit().transition().duration(300).style("opacity", "0").remove();
+
+    fadeUnselectedMetrics();
 
 
+}
+
+function getFaded(d) {
+  
+    if (lineSelectedMetrics.length > 0) {
+        if (isMetricSelected(d.id)){
+            return ""
+        }  else {
+            return "faded"
+        }
+    } else {
+        return ""
+    }
 }
 
 function drawLines(country, metric) {
@@ -193,42 +216,70 @@ function drawLines(country, metric) {
         .on("mouseout", lineHoverOff)
         .on("click", lineClick)
         .on("mousemove", function(){return lineChartTooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");}) 
-        .transition().duration(500)
-        .style("opacity", "1")
-        ;
-    
+        .transition().duration(700)
+        .style("opacity", "1");
+
     lineChartSVG.selectAll(".metricLine")
         .data(lineChartMetrics, d => d.id)
-        .exit().transition().duration(700)
+        .exit().transition().duration(300)
         .style("opacity", "0")
         .remove();
 
-        lineChartSVG.selectAll(".metricDots")
-                .data(lineChartMetrics, d => d.id)
-                .enter()
-                .append("g")
-                .attr("class", "metricDots")
-                    .selectAll(".metricDot")
-                    .data(parseDataForDots).enter()
-                    .append("circle")
-                    .attr('class', "metricDot")
-                    .attr('cx', function(d) { return x(d.year); })
-                    .attr('cy', function(d) { return y(d.value); })
-                    .attr('r', 5)
-                    .attr('fill', d => d.color)
-                    .style("opacity", "0")
-                    .on("mouseover", dotHoverOn)
-                    .on("mouseout", dotHoverOff)
-                    .on("click", dotClick)
-                    .transition().duration(500)
-                    .style("opacity", "1")
+    lineChartSVG.selectAll(".metricLine")
+        .data(lineChartMetrics, d => d.id)
+        .style("opacity", "1")
+        .transition().duration(700)
+        .attr("d", function(d) { return line(d.data)});
 
-        lineChartSVG.selectAll(".metricDots")
-                    .data(lineChartMetrics, d => d.id)
-                    .exit().transition().duration(700)
-                    .style("opacity", "0")
-                    .remove();
-        
+    lineChartSVG.selectAll(".metricDots")
+            .data(lineChartMetrics, d => d.id)
+            .enter()
+            .append("g")
+            .attr("class", "metricDots")
+                .selectAll(".metricDot")
+                .data(parseDataForDots).enter()
+                .append("circle")
+                .attr('class', "metricDot")
+                .attr('cx', function(d) { return x(d.year); })
+                .attr('cy', function(d) { return y(d.value); })
+                .attr('r', 5)
+                .attr('fill', d => d.color)
+                .style("opacity", "0")
+                .on("mouseover", dotHoverOn)
+                .on("mouseout", dotHoverOff)
+                .on("click", dotClick)
+                .transition().duration(700)
+                .style("opacity", "1")
+
+    lineChartSVG.selectAll(".metricDots")
+                .data(lineChartMetrics, d => d.id)
+                .exit().transition().duration(300)
+                .style("opacity", "0")
+                .remove();
+
+    lineChartSVG.selectAll(".metricDots")
+            .data(lineChartMetrics, d => d.id)
+                .selectAll(".metricDot")
+                .data(parseDataForDots)
+                .style("opacity", "1")
+                .transition().duration(700)
+                .attr('cy', function(d) { return y(d.value); });
+                
+
+    fadeUnselectedMetrics();
+    
+}
+
+function fadeUnselectedMetrics() {
+    d3.selectAll(".metricLine").filter(d => (isMetricSelected(d.id))).classed("faded", false);
+    d3.selectAll(".lineLegendSquare").filter(d => (isMetricSelected(d.id))).classed("faded", false)
+    d3.selectAll(".metricDots").filter(d => (isMetricSelected(d.id))).classed("faded", false);
+
+    if (lineSelectedMetrics.length > 0) {
+        d3.selectAll(".metricLine").filter(d => (!isMetricSelected(d.id))).classed("faded", true);
+        d3.selectAll(".lineLegendSquare").filter(d => !isMetricSelected(d.id)).classed("faded", true)
+        d3.selectAll(".metricDots").filter(d => (!isMetricSelected(d.id))).classed("faded", true);
+    }
 }
 
 function parseDataForDots(d) {
@@ -263,21 +314,68 @@ function returnColor(color) {
 }
 
 dispatcher.on("metricSelected.linechart", function(code) {
-    console.log(lineChartMetrics);
+    if (lineChartMetrics.length >= 7) return;
     var index = metricIndex(code);
-    lineChartMetrics.push({"country": "PRT", "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, "PRT")});    
-    drawLines("PRT", code);
+    if (metricIndex(code) == -1){ 
+        lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
+    }
+    drawLines(COUNTRY1, code);
+    drawLineLegend();
+});
+
+dispatcher.on("metric1Selected.linechart", function(code) {
+    var currentIndex = metricIndex(currentMetric1);
+    returnColor(lineChartMetrics[currentIndex].color)
+    lineChartMetrics.splice(currentIndex, 1);
+
+    lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
+    
+    currentMetric1 = code;
+    drawLines(COUNTRY1, code);
+    drawLineLegend();
+});
+
+dispatcher.on("metric2Selected.linechart", function(code) {
+    var currentIndex = metricIndex(currentMetric2);
+    returnColor(lineChartMetrics[currentIndex].color)
+    lineChartMetrics.splice(currentIndex, 1);
+
+    lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
+    
+    currentMetric2 = code;
+    drawLines(COUNTRY1, code);
     drawLineLegend();
 });
 
 dispatcher.on("metricUnselected.linechart", function(code) {
-    console.log(lineChartMetrics);
-    var index = metricIndex(code);
+    if (code == METRIC1 || code == METRIC2) return;
 
+    var index = metricIndex(code);
     returnColor(lineChartMetrics[index].color)
     lineChartMetrics.splice(index, 1);
 
-    drawLines("PRT", code);
+    drawLines(COUNTRY1, code);
+    drawLineLegend();
+});
+
+dispatcher.on("country1Selected.linechart", function(code) {
+    var currentMetrics = [];
+
+    for (i in lineChartMetrics) {
+        currentMetrics.push(lineChartMetrics[i].id);
+    }
+
+    for (m in currentMetrics) {
+        console.log(currentMetrics)
+        var index = metricIndex(currentMetrics[m]);
+        var color = (lineChartMetrics[index].color)
+        lineChartMetrics.splice(index, 1);
+        lineChartMetrics.push({"country": COUNTRY1, "id": currentMetrics[m], "color": color, "data": parseMetricsForCountry(currentMetrics[m], COUNTRY1)});
+    }
+
+    console.log(lineChartMetrics)
+
+    drawLines(COUNTRY1, code);
     drawLineLegend();
 });
 
