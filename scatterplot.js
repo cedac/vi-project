@@ -26,7 +26,6 @@ var sp_tooltip = d3.select("body")
         .style("opacity", 0);
 
 function chooseColor(c) {
-    debugger
     return COLOR_SCALE((c.x_5 + c.y_5) / 2)
     switch (d[c].Continent) {
         case 'Europe':
@@ -159,7 +158,7 @@ function sp_highlightSelectedCountries() {
         .filter(d => d.id == COUNTRY1)
         .transition()
         .duration(500)
-        .style('fill', 'rgba(255,22,22,0.8)')
+        .style('stroke', 'rgba(255,22,22,0.8)')
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
 
     sp_svg.selectAll(".dot")
@@ -167,7 +166,7 @@ function sp_highlightSelectedCountries() {
         .filter(d => d.id == COUNTRY2)
         .transition()
         .duration(500)
-        .style('fill', 'rgba(22,22,200,0.8)')
+        .style('stroke', 'rgba(22,22,200,0.8)')
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
 }
 

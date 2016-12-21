@@ -170,10 +170,10 @@ function drawCountry(country, n) {
             var index = selected_metrics.indexOf(code) 
             if (index > -1) {
                 selected_metrics.splice(index, 1)
-                dispatcher.call('metricSelected', this, d)
+                dispatcher.call('metricUnselected', this, d)
             } else {
                 selected_metrics.push(code)
-                dispatcher.call('metricUnselected', this, d)
+                dispatcher.call('metricSelected', this, d)
             }
         })
         .style("fill", colorScale_scaleValue)
