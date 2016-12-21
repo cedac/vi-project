@@ -2,10 +2,7 @@
   <head>
     <meta charset="utf-8" /> 
     <title>Global Peace Index</title>
-    <link rel="stylesheet" href="app.css">   
-    <script src="https://d3js.org/d3.v4.min.js" charset="utf-8"></script>
-   	<script src="http://d3js.org/topojson.v2.min.js"></script>
-   
+    <link rel="stylesheet" href="app.css">
   </head>
 
   <body>
@@ -14,21 +11,13 @@
       <div class="topcenter">
         <div class="col">
           Select countries or continents...<br>
-          <select name="country1">
-            <option value="1">Just a long name...</option>
-          </select>
-          <select name="country2">
-            <option value="1">Just a long name...</option>          
-          </select>
+          <select id="country1"></select>
+          <select id="country2"></select>
         </div>
         <div class="col">
           ..and metrics!<br>
-          <select name="country1">
-            <option value="1">Just a long name...</option>          
-          </select>
-          <select name="country1">
-            <option value="1">Just a long name...</option>          
-          </select>
+          <select id="metric1"></select>
+          <select id="metric2"></select>
         </div>
       </div>
       <div class="topright">
@@ -65,9 +54,16 @@
         <div id="div4" class="linechart"></div>
       </div>
     
+
+
+    <script src="lib/d3/d3.v4.min.js" charset="utf-8"></script>
+    <script src="lib/d3/topojson.v2.min.js"></script>
+    <script src="lib/jquery/jquery-3.1.1.min.js"></script>
+
     <script src="const.js"></script>
     <script src="metrics.js"></script>
     <script src="multilinechart.js"></script>
+    <script src="dropdown.js"></script>
     <script src="choro.js"></script>
     <script src="heatmap.js"></script>
     <script src="cdotplot.js"></script>

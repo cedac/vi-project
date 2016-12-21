@@ -8,7 +8,8 @@ d3.json('dataset.json', data => {
     }
     sortMetrics(d[COUNTRY1])
     drawHeatmap(d[COUNTRY1], d[COUNTRY2])
-    drawScatterplot('UNEMPLOYMENT', 'GDPPC')
+    drawScatterplot(METRIC1, METRIC2)
+    initCountryDropdowns(d)
 });
 
 function scale_metric(d, v, c) {
@@ -109,6 +110,7 @@ function changeYear(v) {
 }
 
 function playYears(start, end) {
+    var timeout = 3000
     document.getElementById("play").disabled = true
     if (start > end) {
         document.getElementById("play").disabled = false
@@ -119,5 +121,5 @@ function playYears(start, end) {
     document.getElementById("range").textContent = start
     dispatcher.call('yearSelected', this, start + '')
 
-    setTimeout(() => playYears(start + 1, end), start == 2008 ? 500 : 3000)
+    setTimeout(() => playYears(start + 1, end), timeout)
 }

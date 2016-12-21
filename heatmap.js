@@ -144,7 +144,10 @@ var colorScale = d3.scaleQuantile()
     .range(COLORS);
 
 var scale_metric_heatmap = d => scale_metric(d, d => d.value, d => d.metric_code)
-var colorScale_scaleValue = d => colorScale(scale_metric_heatmap(d))
+var colorScale_scaleValue = d => {
+    var value = scale_metric_heatmap(d)
+    return VALID_RANGE(value) ? colorScale(value) : NOVALUE_COLOR
+}
 
 function drawCountry(country, n) {
     var heatmapData = parseHeatmapData(country);
