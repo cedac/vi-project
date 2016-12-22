@@ -90,6 +90,8 @@ function drawMap(error, data) {
             .on("mouseover", hoverOn)
             .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
             .on("mouseout", hoverOff)
+            .on('contextmenu', d3.contextMenu(menuMapa, function() {
+                    lockHover();}))
             .on("click", click);
     
     mapSVG.selectAll(".country").filter( d => d.id == COUNTRY1).classed("selected1", true);
@@ -184,11 +186,27 @@ function click(c) {
         COUNTRY2 = getContinent(c);
         dispatcher.call("country2Selected", this, COUNTRY2);
     }
-    console.log("c1: " + COUNTRY1 + " | c2: " + COUNTRY2);
-    updateMap();
 }
 
+dispatcher.on("country1Selected.map", function(e) {
+    console.log("updateMap")
+    updateMap();
+});
+
+dispatcher.on("country2Selected.map", function(e) {
+    updateMap();
+});
+
+function lockHover() {
+    console.log("lockHover")
+    hoverOn(c)
+}
+
+
 function hoverOn(c, forceContinent = false) {
+    console.log(c);
+
+    hoveredCountry = c.id;
 
     if (countriesWithData.indexOf(c.id) == -1) {
         tooltip.style("visibility", "hidden");

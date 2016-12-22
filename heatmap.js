@@ -166,6 +166,7 @@ function drawCountry(country, n) {
         .on("mouseover", function(d) { dispatcher.call("metricEnter", this, d.metric_code) })
         .on("mouseout", function(d) { dispatcher.call("metricLeave", this, d.metric_code) })
         .on('click', d => heatmap_cdot_onClick(d.metric_code))
+        .on('contextmenu', d3.contextMenu(heatMapMenu))
         .style("fill", colorScale_scaleValue)
     
     squares
