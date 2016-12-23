@@ -74,7 +74,7 @@ var choroMenu = [
 var primaryOption = {
     title: 'Select as Primary metric',
     action: function(elm, d, i) {
-        METRIC1 = d.metric_code;
+        METRIC1 = getDMetricCode(d);
         dispatcher.call("metric1Selected", this, METRIC1);
     }
 }
@@ -82,7 +82,7 @@ var primaryOption = {
 var secondaryOption = {
     title: 'Select as Secondary metric',
     action: function(elm, d, i) {
-        METRIC2 = d.metric_code;
+        METRIC2 = getDMetricCode(d);
         dispatcher.call("metric2Selected", this, METRIC2);
     }
 }
