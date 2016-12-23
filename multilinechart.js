@@ -245,13 +245,14 @@ function drawLines(country, metric) {
     
 
     lineChartSVG.selectAll(".metricDots")
-            .data(lineChartMetrics, d => d.id)
+            .data(lineChartMetrics, d => d.id + ":" + d.country)
             .enter()
             .append("g")
             .attr("class", "metricDots")
                 .selectAll(".metricDot")
-                .data(parseDataForDots).enter()
+                .data(parseDataForDots, d => d.year).enter()
                 .append("circle")
+                .filter(function(d) {console.log(d); return true})
                 .attr('class', "metricDot")
                 .attr('cx', function(d) { return x(d.year); })
                 .attr('cy', function(d) {return y(d.value);})
@@ -265,7 +266,7 @@ function drawLines(country, metric) {
                 .style("opacity", "1")
 
     lineChartSVG.selectAll(".metricDots")
-                .data(lineChartMetrics, d => d.id)
+                .data(lineChartMetrics, d => d.id + ":" + d.country)
                 .exit().transition().duration(300)
                 .style("opacity", "0")
                 .remove();
@@ -298,10 +299,22 @@ function updateLines() {
             .data(lineChartMetrics, d => d.id)
                 .selectAll(".metricDot")
                 .data(parseDataForDots)
+                .filter(d => d.value != -1)
                 .style("opacity", "1")
                 .transition().duration(700)
+                .style("display", "")
                 .attr('cy', function(d) {return y(d.value);});
-    
+
+    lineChartSVG.selectAll(".metricDots")
+            .data(lineChartMetrics, d => d.id)
+                .selectAll(".metricDot")
+                .data(parseDataForDots)
+                .filter(d => d.value == -1)
+                .style("opacity", "1")
+                .transition().duration(700)
+                .style("opacity", "0")
+                .style("display", "none");    
+                
     fadeUnselectedMetrics();
 }
 
@@ -321,10 +334,12 @@ function parseDataForDots(d) {
     var output = [];
 
     for (e in d.data) {
-        point = d.data[e];
-        point["id"] = d.id;
-        point["color"] = d.color;
-        output.push(point);
+        if (d.data[e] != -1) {
+            point = d.data[e];
+            point["id"] = d.id;
+            point["color"] = d.color;
+            output.push(point);
+        }
     }
 
     return output;
@@ -388,6 +403,9 @@ dispatcher.on("metricUnselected.linechart", function(code) {
     if (code == METRIC1 || code == METRIC2) return;
 
     var index = metricIndex(code);
+
+    if (index == -1) return;
+
     returnColor(lineChartMetrics[index].color)
     lineChartMetrics.splice(index, 1);
 
