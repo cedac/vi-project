@@ -36,11 +36,11 @@ var choroMenu = [
         action: function(elm, d, i) {
             if (!continentView) {
                 COUNTRY2 = d.id;
-                dispatcher.call("country1Selected", this, COUNTRY2);
+                dispatcher.call("country2Selected", this, COUNTRY2);
             }
             else if (continentView) {
                 COUNTRY2 = getContinent(d);
-                dispatcher.call("country1Selected", this, COUNTRY2);
+                dispatcher.call("country2Selected", this, COUNTRY2);
             
             }
         }
