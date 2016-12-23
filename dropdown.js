@@ -44,6 +44,16 @@ function initCountryDropdowns(d) {
 
     c1.value = COUNTRY1
     c2.value = COUNTRY2
+
+    c1.onchange = e => {
+        COUNTRY1 = c1[c1.selectedIndex].value
+        dispatcher.call("country1Selected", c1, COUNTRY1)
+    }
+
+    c2.onchange = e => {
+        COUNTRY2 = c2[c2.selectedIndex].value
+        dispatcher.call("country2Selected", c2, COUNTRY2)
+    }
 }
 
 (function(){
@@ -76,3 +86,5 @@ function initCountryDropdowns(d) {
 
 dispatcher.on('country1Selected.dropdown', c => c1.value = c)
 dispatcher.on('country2Selected.dropdown', c => c2.value = c)
+dispatcher.on('metric1Selected.dropdown', m => m1.value = m)
+dispatcher.on('metric2Selected.dropdown', m => m2.value = m)

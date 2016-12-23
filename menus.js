@@ -31,7 +31,7 @@ var secondaryOption = {
     title: 'Select as Secondary metric',
     action: function(elm, d, i) {
         METRIC2 = d.metric_code;
-        dispatcher.call("metric1Selected", this, METRIC2);
+        dispatcher.call("metric2Selected", this, METRIC2);
     }
 }
 
