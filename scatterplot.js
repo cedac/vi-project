@@ -33,8 +33,47 @@ var sp_svg = d3.select(".scatterplot")
 
 var sp_tooltip = d3.select("body")
     .append("div")
-        .attr("class", "tooltip")
-        .style("opacity", 0);
+    .classed("sp-tooltip", true)
+    .style("position", "absolute")
+    .style("z-index", 10)
+    .style("opacity", 0)
+
+function sp_highlight_dot(dot, i, all) {
+    sp_svg.selectAll('.dot').classed('sp-highlight', false)
+    d3.select(all[i]).classed('sp-highlight', true)
+    sp_tooltip_show(dot)
+}
+
+function sp_remove_highlight_dot(dot) {
+    sp_svg.selectAll('.dot').classed('sp-highlight', false)
+    sp_tooltip_hide(dot)
+}
+
+function sp_tooltip_show(dot) {
+    sp_tooltip.html(
+        "<h3>" + d[dot.id].name + "</h3>" + 
+        "<p>" + METRICS[dot.mx].name + ": " + dot.x_5.toFixed(2) + "</p>" +
+        "<p>" + METRICS[dot.my].name + ": " + dot.y_5.toFixed(2) + "</p>"
+    )
+    
+    sp_tooltip.transition().duration(300).style("opacity", "0.9");
+    sp_tooltip_track(dot)
+}
+
+function sp_tooltip_hide(d) {
+    sp_tooltip
+        .transition().duration(300)
+        .style("opacity", "0")
+        .transition()
+        .style("top", -2000 + "px")
+        .style("left", -2000 + "px");
+}
+
+function sp_tooltip_track(d) {
+    sp_tooltip
+        .style("top", (d3.event.pageY - 10) + "px")
+        .style("left",(d3.event.pageX + 10) + "px")
+}
 
 function chooseColor(c) {
     return sp_colorScale(c)
@@ -67,7 +106,9 @@ function parseScatterplotData(mx, my) {
             y_5: METRICS[my].scale ? METRICS[my].scale(d[c][my][YEAR]) : d[c][my][YEAR],
             color: 'white',
             id: c,
-            r: d[c].POPULATION[YEAR] > 0 ? Math.pow(d[c].POPULATION[YEAR],1/6)/4.5 : 3
+            r: d[c].POPULATION[YEAR] > 0 ? Math.pow(d[c].POPULATION[YEAR],1/6)/4.5 : 3,
+            mx: mx,
+            my: my
         }
         obj.color = chooseColor(obj)
         data.push(obj)
@@ -133,6 +174,11 @@ function updateScatterplot(mx, my) {
         .style('opacity', 0)
         .style('stroke', STROKE_COLOR)
         .style('stroke-width', STROKE_WIDTH)
+        .on('mouseover', sp_highlight_dot)
+        .on('mouseout', sp_remove_highlight_dot)
+        .on("mousemove", sp_tooltip_track)
+        .on('contextmenu', d3.contextMenu(menuMapa))
+
 
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)

@@ -257,9 +257,8 @@ function heatmap_cdot_onClick(code) {
     var index = selected_metrics.indexOf(code) 
     if (index > -1) {
         selected_metrics.splice(index, 1)
-        dispatcher.call('metricUnselected', this, code)
     } else {
         selected_metrics.push(code)
-        dispatcher.call('metricSelected', this, code)
     }
+    updateHeatmapMetricAxisColor()
 }

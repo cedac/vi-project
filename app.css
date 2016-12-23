@@ -244,7 +244,7 @@ text.axis-worktime {
   stroke: #FFFF00;
 }
 
-.map-tooltip {
+.map-tooltip, .sp-tooltip {
   padding: 10px;
   border-radius: 5px;
   background: rgba(78, 74, 74, 0.60);
@@ -288,4 +288,9 @@ text.axis-worktime {
 }
 .d3-context-menu li {
   color: #111
+}
+.sp-highlight {
+  fill: #aa7700 !important;
+  stroke: #ccc !important;
+  stroke-width: 2px !important;
 }
