@@ -28,8 +28,10 @@ function sortMetrics(country) {
             if (METRICS[metric].five !== true && METRICS[metric].scale == undefined) {
                 continue;
             }
+            var scaled_value = scale_metric(country[metric][YEAR], d => d, d => metric)
+            var sort_value = VALID_RANGE(scaled_value) ? scaled_value : 9e99
             values.push({
-                v: scale_metric(country[metric][YEAR], d => d, d => metric),
+                v: sort_value,
                 m: metric
             })
         }
@@ -37,6 +39,7 @@ function sortMetrics(country) {
     values.sort(function(a,b) {
         return (a.v > b.v) ? 1 : (b.v > a.v) ? -1 : 0
     })
+    
     for (var i = 0; i < values.length; i++) {
         METRICS[values[i].m].sort = i
     }

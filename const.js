@@ -1,3 +1,7 @@
+const DEBUG = window.location.hash == "#debug"
+
+const TEXT_COLOR = '#aaa'
+
 const FADE_OPACITY = 0.15
 const WIDTH = 0
 const HEIGHT = 0
@@ -11,6 +15,8 @@ const SCATTERPLOT_QUADRANT_COLOR = 'rgba(180,180,180,0.05)'
 const VALID_RANGE = v => v >= 1 && v <= 5
 
 const NOVALUE_COLOR = '#777'
+const COUNTRY1_COLOR = '#b2df8a'
+const COUNTRY2_COLOR = '#a6cee3'
 
 var YEAR = "2008"
 var COUNTRY1 = "PRT"
@@ -34,3 +40,13 @@ var dispatcher = d3.dispatch(
     "countryEnter", "country1Selected", "country2Selected", 
     "metricSelected", "metricUnselected", "yearSelected",
     "metric1Selected", "metric2Selected")
+
+if (DEBUG) {
+    const events = Object.keys(dispatcher._)
+    for (i in events) {
+        const event = events[i]
+        dispatcher.on(events[i] + ".logger", (that, args) => {
+            console.log('[Event Logger] ' + event + ' fired. ', that, args)
+        })
+    }
+}

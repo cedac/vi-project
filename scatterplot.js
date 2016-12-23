@@ -1,3 +1,9 @@
+const STROKE_HIGHLIGHT_WIDTH = '1px'
+const STROKE_WIDTH = '0.1px'
+const STROKE_COLOR = 'black'
+const STROKE_HIGHLIGHT_COLOR_1 = COUNTRY1_COLOR //'rgba(255,22,22,0.8)'
+const STROKE_HIGHLIGHT_COLOR_2 = COUNTRY2_COLOR //'rgba(22,22,200,0.8)'
+const SCATTERPLOT_DOT_OPACITY = 0.95
 
 var sp_margin = {top: 15, right: 20, bottom: 35, left: 60}
 
@@ -60,7 +66,8 @@ function parseScatterplotData(mx, my) {
             y: d[c][my][YEAR],
             y_5: METRICS[my].scale ? METRICS[my].scale(d[c][my][YEAR]) : d[c][my][YEAR],
             color: 'white',
-            id: c
+            id: c,
+            r: d[c].POPULATION[YEAR] > 0 ? Math.pow(d[c].POPULATION[YEAR],1/6)/4.5 : 3
         }
         obj.color = chooseColor(obj)
         data.push(obj)
@@ -107,6 +114,7 @@ function drawScatterplot(mx, my) {
       .text(METRICS[my].name);
 
       updateScatterplot(mx, my)
+      //sp_highlightSelectedCountries()
 }
 
 function updateScatterplot(mx, my) {
@@ -118,17 +126,30 @@ function updateScatterplot(mx, my) {
         .filter(d => VALID_RANGE(d.x_5) && VALID_RANGE(d.y_5))
         .append("circle")
         .attr("class", "dot")
-        .attr("r", 4)
+        .attr("r", d => d.r)
         .attr("cx", sp_xMap)
         .attr("cy", sp_yMap)
         .style("fill", d => d.color)
-        .style('opacity', '0.85')
-        .style('stroke-width', '2px')
+        .style('opacity', 0)
+        .style('stroke', STROKE_COLOR)
+        .style('stroke-width', STROKE_WIDTH)
 
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
+        .filter(d => !(VALID_RANGE(d.x_5) && VALID_RANGE(d.y_5)))
         .transition()
         .duration(1000)
+        .style('opacity', 0)
+        .remove()
+
+    sp_svg.selectAll(".dot")
+        .data(data, d => d.id)
+        .filter(d => VALID_RANGE(d.x_5) && VALID_RANGE(d.y_5))
+        .sort((a,b) => a.r < b.r ? 1 : (a.r > b.r ? -1 : 0))
+        .order()
+        .transition()
+        .duration(1000)
+        .style('opacity', SCATTERPLOT_DOT_OPACITY)
         .attr('cx', sp_xMap)
         .attr('cy', sp_yMap)
         .style('fill', sp_colorScale)
@@ -142,14 +163,16 @@ function sp_highlightSelectedCountries() {
         .data(data, d => d.id)
         .transition()
         .duration(500)
-        .style('stroke', 'none')
+        .style('stroke', STROKE_COLOR)
+        .style('stroke-width', STROKE_WIDTH)
 
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
         .filter(d => d.id == COUNTRY1)
         .transition()
         .duration(500)
-        .style('stroke', 'rgba(255,22,22,0.8)')
+        .style('stroke', STROKE_HIGHLIGHT_COLOR_1)
+        .style('stroke-width', STROKE_HIGHLIGHT_WIDTH)
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
 
     sp_svg.selectAll(".dot")
@@ -157,7 +180,8 @@ function sp_highlightSelectedCountries() {
         .filter(d => d.id == COUNTRY2)
         .transition()
         .duration(500)
-        .style('stroke', 'rgba(22,22,200,0.8)')
+        .style('stroke', STROKE_HIGHLIGHT_COLOR_2)
+        .style('stroke-width', STROKE_HIGHLIGHT_WIDTH)
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
 }
 
