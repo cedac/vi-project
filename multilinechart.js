@@ -528,10 +528,10 @@ function legendClick(c) {
     if (isMetricSelected(c.id)) {
         index = lineSelectedMetrics.indexOf(c.id);
         lineSelectedMetrics.splice(index, 1);
-        d3.selectAll(".lineLegend").filter(d => d.id == c.id).classed("selectedLabel", false);
+        d3.selectAll(".lineLegend").filter(d => d.id == c.id).selectAll("p").transition().duration(300).style("color", "#ccc");
     } else {
         lineSelectedMetrics.push(c.id);
-        d3.selectAll(".lineLegend").filter(d => d.id == c.id).classed("selectedLabel", true);        
+        d3.selectAll(".lineLegend").filter(d => d.id == c.id).selectAll("p").transition().duration(300).style("color", "#aa7700");
     }
 }
 

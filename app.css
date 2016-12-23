@@ -290,6 +290,10 @@ text.axis-worktime {
   fill: #aa7700 !important;
 }
 
+.selectedLegend {
+  color: #aa7700 !important;
+}
+
 .highlightedLine {
   stroke-width: 3px !important;
 }
