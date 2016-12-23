@@ -59,7 +59,7 @@ function initCountryDropdowns(d) {
 (function(){
     var dropdown_metrics = []
     for (m in METRICS) {
-        if ("name" in METRICS[m]) {
+        if ("name" in METRICS[m] && (METRICS[m].five || METRICS[m].scale != undefined)) {
             dropdown_metrics.push(METRICS[m])
         }
     }
