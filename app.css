@@ -282,3 +282,7 @@ text.axis-worktime {
 .selectedLabel {
   fill: #aa7700 !important;
 }
+
+.d3-context-menu li {
+  color: #111
+}

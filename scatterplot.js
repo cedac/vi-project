@@ -114,7 +114,7 @@ function drawScatterplot(mx, my) {
       .text(METRICS[my].name);
 
       updateScatterplot(mx, my)
-      //sp_highlightSelectedCountries()
+      sp_highlightSelectedCountries()
 }
 
 function updateScatterplot(mx, my) {
@@ -161,16 +161,16 @@ function updateScatterplot(mx, my) {
 function sp_highlightSelectedCountries() {
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
-        .transition()
-        .duration(500)
+        //.transition()
+        //.duration(500)
         .style('stroke', STROKE_COLOR)
         .style('stroke-width', STROKE_WIDTH)
 
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
         .filter(d => d.id == COUNTRY1)
-        .transition()
-        .duration(500)
+        //.transition()
+        //.duration(500)
         .style('stroke', STROKE_HIGHLIGHT_COLOR_1)
         .style('stroke-width', STROKE_HIGHLIGHT_WIDTH)
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
@@ -178,8 +178,8 @@ function sp_highlightSelectedCountries() {
     sp_svg.selectAll(".dot")
         .data(data, d => d.id)
         .filter(d => d.id == COUNTRY2)
-        .transition()
-        .duration(500)
+        //.transition()
+        //.duration(500)
         .style('stroke', STROKE_HIGHLIGHT_COLOR_2)
         .style('stroke-width', STROKE_HIGHLIGHT_WIDTH)
         .each((x,y,z) => { z[0].parentNode.appendChild(z[0])});
