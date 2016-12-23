@@ -17,14 +17,14 @@ var menuMapa = [
 
 var choroMenu = [
     {
-        title: 'Select as primary country',
+        title: 'Select as primary',
         action: function(elm, d, i) {
             if (!continentView) {
                 COUNTRY1 = d.id;
                 dispatcher.call("country1Selected", this, COUNTRY1);
             }
             else if (continentView) {
-                COUNTRY1 = getContinent(c);
+                COUNTRY1 = getContinent(d);
                 dispatcher.call("country1Selected", this, COUNTRY1);
             
             }
@@ -32,17 +32,31 @@ var choroMenu = [
         }
     },
     {
-        title: 'Select as secondary country',
+        title: 'Select as secondary',
         action: function(elm, d, i) {
             if (!continentView) {
                 COUNTRY2 = d.id;
                 dispatcher.call("country1Selected", this, COUNTRY2);
             }
             else if (continentView) {
-                COUNTRY2 = getContinent(c);
+                COUNTRY2 = getContinent(d);
                 dispatcher.call("country1Selected", this, COUNTRY2);
             
             }
+        }
+    },
+    {
+        title: 'Select continent as primary',
+        action: function(elm, d, i) {
+            COUNTRY1 = getContinent(d);
+            dispatcher.call("country1Selected", this, COUNTRY1);
+        }
+    },
+    {
+        title: 'Select continent as secondary',
+        action: function(elm, d, i) {
+            COUNTRY1 = getContinent(2);
+            dispatcher.call("country2Selected", this, COUNTRY2);
         }
     },
     {
