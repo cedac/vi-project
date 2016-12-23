@@ -1,0 +1,15 @@
+1 - Explicar o contexto da visualização 
+
+2 - Falar do heatmap + dot plot (o que se vê, como se usa)
+
+3 - Falar do mapa (o que se vê, como se usa)
+
+4 - Falar do linechart (o que se vê, como se usa)
+
+5 - Falar do scatter plot (o que se vê, como se usa)
+
+6 - Comparar USA com a Siria, seleccionando nas drop boxes -> play years + lock metrics -> verificar que a síria era fixe
+
+6.1 - Meter algumas metricas de interesse no line chart e ver a evolução
+
+7 - Comparar um continente com um país ou continente com continente -> olhar para o scatterplot com algumas métricas interessantes
