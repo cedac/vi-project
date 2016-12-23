@@ -1,3 +1,5 @@
+var d = undefined
+
 const DEBUG = window.location.hash == "#debug"
 
 const TEXT_COLOR = '#aaa'
