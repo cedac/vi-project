@@ -23,8 +23,8 @@ const COUNTRY2_COLOR = '#beaed4'
 var YEAR = "2008"
 var COUNTRY1 = "PRT"
 var COUNTRY2 = "ISL"
-var METRIC1 = "HOMICIDES"
-var METRIC2 = "OVERALL"
+var METRIC1 = "OVERALL"
+var METRIC2 = "HOMICIDES"
 
 var SORT_LOCK = false
 
