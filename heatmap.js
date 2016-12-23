@@ -109,7 +109,7 @@ var hm_margin = {
     gridSize = 13
     legendElementWidth = gridSize * 2,
     buckets = 8,
-    years = ["08", "09", "10", "11", "12", "13", "14"];
+    //years = ["08", "09", "10", "11", "12", "13", "14"];
     years = ["2008", "", "", "", "", "", "2014"];
     //years = ["'08", "", "", "", "", "", "'14"];
 
@@ -127,7 +127,7 @@ yearsLabel
     .append("text")
     .text(function(d) { return d; })
     .attr("x", function(d, i) { return i * gridSize; })
-    .attr("y", 0)
+    .attr("y", 3)
     .style("text-anchor", "middle")
     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
     .attr("class", "timeLabel mono axis")
@@ -136,7 +136,7 @@ yearsLabel
     .append("text")
     .text(function(d) { return d; })
     .attr("x", function(d, i) { return i * gridSize + COUNTRY_2_OFFSET; })
-    .attr("y", 0)
+    .attr("y", 3)
     .style("text-anchor", "middle")
     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
     .attr("class", "timeLabel mono axis");
