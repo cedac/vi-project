@@ -55,7 +55,7 @@ var choroMenu = [
     {
         title: 'Select continent as secondary',
         action: function(elm, d, i) {
-            COUNTRY1 = getContinent(2);
+            COUNTRY2 = getContinent(d);
             dispatcher.call("country2Selected", this, COUNTRY2);
         }
     },
