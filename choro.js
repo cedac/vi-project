@@ -26,13 +26,13 @@ var tooltip = d3.select("body")
         .style("z-index", "10")
         .style("visibility", "hidden");
 
-d3.json("dataset.json", function (data) {
+function bootstrap_map(dataset) {
     dataset = data;
     mapMetric = "OVERALL";
 
     countriesWithData = Object.keys(dataset);
     genChoroplethMap();
-})
+}
 
 function genChoroplethMap() {
 

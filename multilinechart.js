@@ -6,9 +6,9 @@ const dummyMetric1 = "OVERALL";
 const dummyMetric2 = "EXTERNAL_CONFLICTS";
 
 
-var lineChartMargin = {top: 20, right: 0, bottom: 30, left: 50},
+var lineChartMargin = {top: 15, right: 0, bottom: 30, left: 50},
     lineChartWidth = 700,
-    lineChartHeight = 270;
+    lineChartHeight = 280;
 
 var lineLegendMargin = {top: 20, right: 90, bottom: 30, left: 0},
     lineLegendWidth = 100,
@@ -55,7 +55,7 @@ function parseMetricsForCountry (metric, country) {
     return parsedValues;
 }    
 
-d3.json("dataset.json", function (data) {
+function bootstrap_linechart(dataset) {
     dataset = data;
     lineChartMetrics.push({"country": COUNTRY1, "id": METRIC1, "color": rentColor(), "data": parseMetricsForCountry(METRIC1, COUNTRY1)});    
     lineChartMetrics.push({"country": COUNTRY1, "id": METRIC2, "color": rentColor(), "data": parseMetricsForCountry(METRIC2, COUNTRY1)});    
@@ -64,7 +64,7 @@ d3.json("dataset.json", function (data) {
     currentMetric2 = METRIC2;
     
     genMultiLineChart();
-})
+}
 
 function genMultiLineChart(){
 
@@ -169,6 +169,29 @@ function drawLineLegend() {
                         .attr("y", d => metricIndex(d.id) * 17 + lineLegendSquare * 0.75);
 
     lineLegendLabelsSVG.exit().transition().duration(300).style("opacity", "0").remove();
+
+    lineChartSVG.selectAll(".lineChartCountry")
+                .data(lineChartMetrics, d => d.country)
+                .enter()
+                .append("text")
+                .attr("x", lineLegendPadding)
+                .attr("y", lineLegendHeight + 10)
+                .style("opacity", "0")
+                .text(d => dataset[d.country].name)
+                .transition().duration(700)
+                .style("opacity", "1")
+                .attr("class", "lineChartCountry monoBig");
+
+    lineChartSVG.selectAll(".lineChartCountry")
+                .data(lineChartMetrics, d => d.country)
+                .exit().remove();
+
+    lineChartSVG.selectAll(".lineChartCountry")
+                .data(lineChartMetrics, d => d.country)
+                .style("opacity", "0")
+                .text(d => dataset[d.country].name)
+                .transition().duration(700)
+                .style("opacity", "1");
 
     fadeUnselectedMetrics();
 
@@ -363,6 +386,7 @@ function returnColor(color) {
 }
 
 dispatcher.on("metricSelected.linechart", function(code) {
+    if (currentMetric1 == currentMetric2 && lineChartMetrics.length >= 6) return;
     if (lineChartMetrics.length >= 7) return;
     var index = metricIndex(code);
     if (metricIndex(code) == -1){ 
