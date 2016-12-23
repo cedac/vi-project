@@ -558,7 +558,7 @@ function dotHoverOn(c) {
         lineChartTooltip.html(
                 "<h3>" + dataset[COUNTRY1].name + "</h3>" + 
                 "<h4>" + METRICS[metric].name + "</h4>" + 
-                "<p>Year: " + c.year.toFixed(2) + "</p>" +
+                "<p>Year: " + c.year + "</p>" +
                 "<p>Value: " + c.value.toFixed(2) + "</p>");    
     }
     
