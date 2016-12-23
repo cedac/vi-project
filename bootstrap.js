@@ -5,4 +5,6 @@ d3.json('dataset.json', data => {
     drawHeatmap(d[COUNTRY1], d[COUNTRY2])
     drawScatterplot(METRIC1, METRIC2)
     initCountryDropdowns(d)
+    bootstrap_map(d)
+    bootstrap_linechart(d)
 });
