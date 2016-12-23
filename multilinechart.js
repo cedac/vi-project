@@ -414,7 +414,7 @@ dispatcher.on("metric1Selected.linechart", function(code) {
 
         lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
     }
-     else if (code == currentMetric2) {
+     else if (code == currentMetric2 && lineChartMetrics.length > 1) {
         var currentIndex = metricIndex(currentMetric1);
         returnColor(lineChartMetrics[currentIndex].color)
         lineChartMetrics.splice(currentIndex, 1);
@@ -435,7 +435,7 @@ dispatcher.on("metric2Selected.linechart", function(code) {
 
         lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
     }
-    else if (code == currentMetric1) {
+    else if (code == currentMetric1 && lineChartMetrics.length > 1) {
         var currentIndex = metricIndex(currentMetric2);
         returnColor(lineChartMetrics[currentIndex].color)
         lineChartMetrics.splice(currentIndex, 1);
