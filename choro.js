@@ -134,7 +134,6 @@ function filterContinents(country, continent) {
 }
 
 function isSelected(c) {
-    console.log("c.id: " + c.id + " | sel: " + COUNTRY1);
     if (c.id == COUNTRY1) {
         return "#FF0000";
     } else {
@@ -189,7 +188,6 @@ function click(c) {
 }
 
 dispatcher.on("country1Selected.map", function(e) {
-    console.log("updateMap")
     updateMap();
 });
 
@@ -198,13 +196,11 @@ dispatcher.on("country2Selected.map", function(e) {
 });
 
 function lockHover() {
-    console.log("lockHover")
     hoverOn(c)
 }
 
 
 function hoverOn(c, forceContinent = false) {
-    console.log(c);
 
     hoveredCountry = c.id;
 
@@ -375,7 +371,6 @@ function updateMap() {
             allCountries.filter(d => (getContinent(d) == COUNTRY1) && (d.id != COUNTRY2)).classed("selected1", true).classed("selected2", false);
             allCountries.filter(d => getContinent(d) != COUNTRY1).classed("selected1", false);            
         } else {
-            console.log("classing " + COUNTRY1);
             
             allCountries.filter(d => d.id == COUNTRY1).classed("selected1", true).classed("selected2", false);
             allCountries.filter(d => d.id != COUNTRY1).classed("selected1", false);

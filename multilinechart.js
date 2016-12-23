@@ -101,19 +101,19 @@ function genMultiLineChart(){
                 .tickValues([2008, 2009, 2010, 2011, 2012, 2013, 2014]))
             .append("text")
             .attr("class", "label")
-            .attr("x", lineChartWidth)
-            .attr("y", -6)
-            .style("text-anchor", "end")
+            .attr("x", lineChartWidth/2)
+            .attr("y", 29)
+            .style("text-anchor", "middle")
             .text("Year");
 
      lineChartSVG.append("g")
       .attr("class", "axis line-chart-axis-x")
       .call(d3.axisLeft(y))
       .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
+      .attr("transform", "translate(-40, "+lineChartHeight/2+") rotate(-90)")
       .attr("dy", "0.71em")
       .attr("fill", "#000")
+      .style("text-anchor", "middle")
       .text("Value");
     
     drawLines();
@@ -198,7 +198,6 @@ function getFaded(d) {
 }    
 
 function drawLines(country, metric) {
-    console.log(metric)
 
      var x = d3.scaleTime()
     .rangeRound([0, lineChartWidth]);
@@ -250,7 +249,6 @@ function drawLines(country, metric) {
                 .selectAll(".metricDot")
                 .data(parseDataForDots, d => d.year).enter()
                 .append("circle")
-                .filter(function(d) {console.log(d); return true})
                 .attr('class', "metricDot")
                 .attr('cx', function(d) { return x(d.year); })
                 .attr('cy', function(d) {return y(d.value);})
@@ -373,11 +371,18 @@ dispatcher.on("metricSelected.linechart", function(code) {
 dispatcher.on("metric1Selected.linechart", function(code) {
 
     if (metricIndex(code) == -1) {
+        if (currentMetric1 != currentMetric2) {
+            var currentIndex = metricIndex(currentMetric1);
+            returnColor(lineChartMetrics[currentIndex].color)
+            lineChartMetrics.splice(currentIndex, 1);
+        }
+
+        lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
+    }
+     else if (code == currentMetric2) {
         var currentIndex = metricIndex(currentMetric1);
         returnColor(lineChartMetrics[currentIndex].color)
         lineChartMetrics.splice(currentIndex, 1);
-
-        lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
     }
     
     currentMetric1 = code;
@@ -386,12 +391,20 @@ dispatcher.on("metric1Selected.linechart", function(code) {
 });
 
 dispatcher.on("metric2Selected.linechart", function(code) {
-    var currentIndex = metricIndex(currentMetric2);
-    returnColor(lineChartMetrics[currentIndex].color)
-    lineChartMetrics.splice(currentIndex, 1);
+    if (metricIndex(code) == -1) {
+        if (currentMetric1 != currentMetric2) {
+            var currentIndex = metricIndex(currentMetric2);
+            returnColor(lineChartMetrics[currentIndex].color)
+            lineChartMetrics.splice(currentIndex, 1);
+        }
 
-    lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
-    
+        lineChartMetrics.push({"country": COUNTRY1, "id": code, "color": rentColor(), "data": parseMetricsForCountry(code, COUNTRY1)});    
+    }
+    else if (code == currentMetric1) {
+        var currentIndex = metricIndex(currentMetric2);
+        returnColor(lineChartMetrics[currentIndex].color)
+        lineChartMetrics.splice(currentIndex, 1);
+    }
     currentMetric2 = code;
     drawLines(COUNTRY1, code);
     drawLineLegend();
@@ -429,14 +442,11 @@ dispatcher.on("country1Selected.linechart", function(code) {
     }
 
     for (m in currentMetrics) {
-        console.log(currentMetrics)
         var index = metricIndex(currentMetrics[m]);
         var color = (lineChartMetrics[index].color)
         lineChartMetrics.splice(index, 1);
         lineChartMetrics.push({"country": COUNTRY1, "id": currentMetrics[m], "color": color, "data": parseMetricsForCountry(currentMetrics[m], COUNTRY1)});
     }
-
-    console.log(lineChartMetrics)
 
     updateLines();
     drawLineLegend();
