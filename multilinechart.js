@@ -544,19 +544,23 @@ function lineHoverOn(c) {
     lineChartTooltip.html(
             "<h3>" + identification + "</h3>" + 
             "<h4>" + METRICS[c.id].name + "</h4>");
-    
     lineChartTooltip.transition().duration(300).style("opacity", "0.9");
     lineChartTooltip.style("left", (d3.event.pageX) + "px");	
     lineChartTooltip.style("top", (d3.event.pageY - 28) + "px");
-    lineChartTooltip.style("display", "");	
 }
 
 
 function lineHoverOff(c) {
     legendHoverOff(c);
-    lineChartTooltip.transition().duration(400).style("opacity", "0").transition()
-        .style("display", "none");
-
+    console.log('line - off')    
+    lineChartTooltip
+        .transition().duration(400)
+        .style("opacity", "0")
+        .on('end', d => {
+            lineChartTooltip
+                .style("top", -200+"px")
+                .style("left", -200+"px")
+        })
 }
 
 function lineClick(c) {legendClick(c)}
@@ -600,9 +604,14 @@ function dotHoverOn(c) {
 function dotHoverOff(c) {
     legendHoverOff(c);
     d3.selectAll(".metricDot").transition().duration(200).attr("r", 5);
-    lineChartTooltip.transition().duration(400).style("opacity", "0").transition()
-        .style("top", -200+"px")
-        .style("left", -200+"px");
+    lineChartTooltip
+        .transition().duration(300)
+        .style("opacity", "0")
+        .on('end', d => {
+            lineChartTooltip
+                .style("top", -200+"px")
+                .style("left", -200+"px")
+        })
 }
 function dotClick(c) {legendClick(c)}
 
