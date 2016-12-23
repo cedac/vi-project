@@ -180,13 +180,13 @@ text {
 }
 
 .selected1 {
-  stroke: #b2df8a !important;
-  stroke-width: 1px !important;
+  stroke: #7fc97f !important;
+  stroke-width: 1.5px !important;
 }
 
 .selected2 {
-  stroke: #FF0000 !important;
-  stroke-width: 1px !important;
+  stroke: #beaed4 !important;
+  stroke-width: 1.5px !important;
 }
 
 .country {

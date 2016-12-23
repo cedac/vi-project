@@ -138,6 +138,7 @@ function drawLineLegend() {
                         .on("mouseover", legendHoverOn)
                         .on("mouseout", legendHoverOff)
                         .on("click", legendClick)
+                        .on('contextmenu', d3.contextMenu(lineChartMenu))
                         .transition().duration(700)
                         .style("opacity", "1")
 
@@ -158,7 +159,8 @@ function drawLineLegend() {
                         .text(d => METRICS[d.id].name)
                         .on("mouseover", legendHoverOn)
                         .on("mouseout", legendHoverOff)
-                        .on("click", legendClick)                        
+                        .on("click", legendClick)
+                        .on('contextmenu', d3.contextMenu(lineChartMenu))                        
                         .transition().duration(700)
                         .style("opacity", "1")
                         .attr("class", "lineLegend mono");
@@ -229,6 +231,7 @@ function drawLines(country, metric) {
         .on("mouseout", lineHoverOff)
         .on("click", lineClick)
         .on("mousemove", function(){return lineChartTooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");}) 
+        .on('contextmenu', d3.contextMenu(lineChartMenu))
         .style("opacity", "0")
         .transition().duration(700)
         .style("opacity", "1");
@@ -258,6 +261,7 @@ function drawLines(country, metric) {
                 .on("mouseover", dotHoverOn)
                 .on("mouseout", dotHoverOff)
                 .on("click", dotClick)
+                .on('contextmenu', d3.contextMenu(lineChartMenu))
                 .transition().duration(700)
                 .style("opacity", "1")
 
@@ -518,7 +522,9 @@ function lineHoverOn(c) {
 
 function lineHoverOff(c) {
     legendHoverOff(c);
-    lineChartTooltip.transition().duration(400).style("opacity", "0");
+    lineChartTooltip.transition().duration(400).style("opacity", "0").transition()
+        .style("top", -200+"px")
+        .style("left", -200+"px");
 
 }
 
@@ -537,23 +543,23 @@ function dotHoverOn(c) {
             "<h3>" + dataset[COUNTRY1].name + "</h3>" + 
             "<h4>" + METRICS[metric].name + "</h4>"+ 
             "<p>Year: " + c.year + "</p>" +
-            "<p>Value: " + c.truValue + "%</p>" +
-            "<p>Normalized Value: " + c.value + "</p>");
+            "<p>Value: " + c.truValue.toFixed(2) + "%</p>" +
+            "<p>Normalized Value: " + c.value.toFixed(2) + "</p>");
     } 
     else if(metric == "GDPPC") {
         lineChartTooltip.html(
                 "<h3>" + dataset[COUNTRY1].name + "</h3>" + 
                 "<h4>" + METRICS[metric].name + "</h4>" + 
                 "<p>Year: " + c.year + "</p>" +
-                "<p>Value: " + c.truValue + " $/capita" + "</p>" +
-                "<p>Normalized Value: " + c.value + "</p>");
+                "<p>Value: " + c.truValuet.toFixed(2) + " $/capita" + "</p>" +
+                "<p>Normalized Value: " + c.value.toFixed(2) + "</p>");
     } 
     else {
         lineChartTooltip.html(
                 "<h3>" + dataset[COUNTRY1].name + "</h3>" + 
                 "<h4>" + METRICS[metric].name + "</h4>" + 
-                "<p>Year: " + c.year + "</p>" +
-                "<p>Value: " + c.value + "</p>");    
+                "<p>Year: " + c.year.toFixed(2) + "</p>" +
+                "<p>Value: " + c.value.toFixed(2) + "</p>");    
     }
     
     lineChartTooltip.transition().duration(300).style("opacity", "0.9");
@@ -563,7 +569,9 @@ function dotHoverOn(c) {
 function dotHoverOff(c) {
     legendHoverOff(c);
     d3.selectAll(".metricDot").transition().duration(200).attr("r", 5);
-    lineChartTooltip.transition().duration(400).style("opacity", "0");
+    lineChartTooltip.transition().duration(400).style("opacity", "0").transition()
+        .style("top", -200+"px")
+        .style("left", -200+"px");
 }
 function dotClick(c) {legendClick(c)}
 

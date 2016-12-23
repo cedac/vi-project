@@ -9,10 +9,6 @@ var menuMapa = [
     {
         title: 'Select as secondary country',
         action: function(elm, d, i) {
-            console.log("my things")
-            console.log(elm);
-            console.log(d);
-            console.log(i);
             COUNTRY2 = d.id;
             dispatcher.call("country2Selected", this, COUNTRY2);
         }
@@ -57,4 +53,35 @@ var heatMapMenu = d => {
         return [primaryOption, secondaryOption]
     }
     return [primaryOption, secondaryOption, linechartOption]
+}
+
+var primaryLineChart = {
+        title: 'Select as primary metric',
+        action: function(elm, d, i) {
+            METRIC1 = d.id;
+            dispatcher.call("metric1Selected", this, d.id);
+        }
+    }
+
+var secondaryLineChart = {
+     title: 'Select as secondary metric',
+        action: function(elm, d, i) {
+            METRIC2 = d.id;
+            dispatcher.call("metric2Selected", this, d.id);
+        }
+}
+
+var removeLineChart = {
+    title: 'Remove line',
+        action: function(elm, d, i) {
+            dispatcher.call("metricUnselected", this, d.id);
+    }
+}
+
+var lineChartMenu = d => {
+    if (d.id != METRIC1 && d.id != METRIC2) {
+        return [primaryLineChart, secondaryLineChart, removeLineChart];
+    } else {
+        return [primaryLineChart, secondaryLineChart];
+    }
 }
