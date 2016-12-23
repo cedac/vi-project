@@ -138,7 +138,7 @@ function drawScatterplot(mx, my) {
     .append("text")
       .attr("class", "label sp-x-label")
       .attr("x", sp_width/2)
-      .attr("y", 32)
+      .attr("y", 29)
       .style("text-anchor", "middle")
       .text(METRICS[mx].name);
 
