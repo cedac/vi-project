@@ -283,6 +283,9 @@ text.axis-worktime {
   fill: #aa7700 !important;
 }
 
+.highlightedLine {
+  stroke-width: 3px !important;
+}
 .d3-context-menu li {
   color: #111
 }

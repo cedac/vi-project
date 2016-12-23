@@ -7,12 +7,12 @@ const dummyMetric2 = "EXTERNAL_CONFLICTS";
 
 
 var lineChartMargin = {top: 20, right: 0, bottom: 30, left: 50},
-    lineChartWidth = 700 - lineChartMargin.left - lineChartMargin.right,
-    lineChartHeight = 280 - lineChartMargin.top - lineChartMargin.bottom;
+    lineChartWidth = 700,
+    lineChartHeight = 270;
 
 var lineLegendMargin = {top: 20, right: 90, bottom: 30, left: 0},
-    lineLegendWidth = 100 - lineLegendMargin.left - lineLegendMargin.right,
-    lineLegendHeight = 280 - lineLegendMargin.top - lineLegendMargin.bottom;
+    lineLegendWidth = 100,
+    lineLegendHeight = 270;
 
 var lineChartSVG;
 var lineChartMetrics = [];
@@ -116,8 +116,7 @@ function genMultiLineChart(){
       .attr("fill", "#000")
       .text("Value");
     
-    drawLines("PRT", dummyMetric1);
-
+    drawLines();
     drawLineLegend();
 
 }
@@ -226,8 +225,7 @@ function drawLines(country, metric) {
         .attr("class", "line metricLine")
         .attr("d", function(d) { return line(removeMissingValues(d.data))})
         .style("stroke", d => d.color)
-        .style("stroke-width", "3px")
-        .style("border", "10px solid #fff")
+        .style("stroke-width", "2px")
         .on("mouseover", lineHoverOn)
         .on("mouseout", lineHoverOff)
         .on("click", lineClick)
@@ -292,7 +290,7 @@ function updateLines() {
     lineChartSVG.selectAll(".metricLine")
             .data(lineChartMetrics, d => d.id)
             .style("opacity", "1")
-            .transition().duration(700)
+            .transition().duration(1000)
             .attr("d", function(d) { return line(removeMissingValues(d.data))});
 
     lineChartSVG.selectAll(".metricDots")
@@ -301,7 +299,7 @@ function updateLines() {
                 .data(parseDataForDots)
                 .filter(d => d.value != -1)
                 .style("opacity", "1")
-                .transition().duration(700)
+                .transition().duration(1000)
                 .style("display", "")
                 .attr('cy', function(d) {return y(d.value);});
 
@@ -455,28 +453,28 @@ function metricIndex(metricName) {
 }
 
 function legendHoverOn(c) {
-    d3.selectAll(".metricLine").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false);
-    d3.selectAll(".lineLegendSquare").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false)
-    d3.selectAll(".metricDots").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false);
+    d3.selectAll(".metricLine").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false).classed("highlightedLine", true);
+    d3.selectAll(".lineLegendSquare").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false).classed("highlightedLine", true);
+    d3.selectAll(".metricDots").filter(d => (d.id == c.id || isMetricSelected(d.id))).classed("faded", false).classed("highlightedLine", true);
 
-    d3.selectAll(".metricLine").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true);
-    d3.selectAll(".lineLegendSquare").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true)
-    d3.selectAll(".metricDots").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true);
+    d3.selectAll(".metricLine").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true).classed("highlightedLine", false);
+    d3.selectAll(".lineLegendSquare").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true).classed("highlightedLine", false);
+    d3.selectAll(".metricDots").filter(d => (d.id != c.id && !isMetricSelected(d.id))).classed("faded", true).classed("highlightedLine", false);
 }
 
 function legendHoverOff(c) {
     if (lineSelectedMetrics.length == 0) {
-        d3.selectAll(".metricLine").classed("faded", false);
-        d3.selectAll(".metricDots").classed("faded", false);
-        d3.selectAll(".lineLegendSquare").classed("faded", false);
+        d3.selectAll(".metricLine").classed("faded", false).classed("highlightedLine", false);
+        d3.selectAll(".metricDots").classed("faded", false).classed("highlightedLine", false);
+        d3.selectAll(".lineLegendSquare").classed("faded", false).classed("highlightedLine", false);
     } else {
-        d3.selectAll(".metricLine").filter(d => isMetricSelected(d.id)).classed("faded", false);
-        d3.selectAll(".metricDots").filter(d => isMetricSelected(d.id)).classed("faded", false);
-        d3.selectAll(".lineLegendSquare").filter(d => isMetricSelected(d.id)).classed("faded", false);
+        d3.selectAll(".metricLine").filter(d => isMetricSelected(d.id)).classed("faded", false).classed("highlightedLine", true);;
+        d3.selectAll(".metricDots").filter(d => isMetricSelected(d.id)).classed("faded", false).classed("highlightedLine", true);;
+        d3.selectAll(".lineLegendSquare").filter(d => isMetricSelected(d.id)).classed("faded", false).classed("highlightedLine", true);;
 
-        d3.selectAll(".metricLine").filter(d => !isMetricSelected(d.id)).classed("faded", true);
-        d3.selectAll(".metricDots").filter(d => !isMetricSelected(d.id)).classed("faded", true);
-        d3.selectAll(".lineLegendSquare").filter(d => !isMetricSelected(d.id)).classed("faded", true);
+        d3.selectAll(".metricLine").filter(d => !isMetricSelected(d.id)).classed("faded", true).classed("highlightedLine", false);;
+        d3.selectAll(".metricDots").filter(d => !isMetricSelected(d.id)).classed("faded", true).classed("highlightedLine", false);
+        d3.selectAll(".lineLegendSquare").filter(d => !isMetricSelected(d.id)).classed("faded", true).classed("highlightedLine", false);;
     }
 
 }
