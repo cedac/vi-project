@@ -129,7 +129,7 @@ function drawLineLegend() {
     var squares = lineLegendSquaresSVG.enter()
                         .append("rect")
                         .attr("class", "lineLegendSquare")
-                        .attr("y", d => metricIndex(d.id) * 17)
+                        .attr("y", d => metricIndex(d.id) * 17 * 2)
                         .attr("x", lineLegendPadding)
                         .attr("width", lineLegendSquare)
                         .attr("height", lineLegendSquare)
@@ -143,7 +143,7 @@ function drawLineLegend() {
                         .style("opacity", "1")
 
     lineLegendSquaresSVG.transition().duration(700)
-                        .attr("y", d => metricIndex(d.id) * 17);
+                        .attr("y", d => metricIndex(d.id) * 17 * 2);
 
     lineLegendSquaresSVG.exit().transition().duration(300).style("opacity", "0").remove();
 
@@ -151,36 +151,43 @@ function drawLineLegend() {
     lineLegendLabelsSVG = lineChartSVG.selectAll(".lineLegend")
                             .data(lineChartMetrics, d => d.id)
 
-    lineLegendLabelsSVG.enter()                            
-                        .append("text")
+
+    lineLegendLabelsSVG.enter()                        
+                        .append("foreignObject")
                         .attr("x", lineLegendPadding + lineLegendSquare + lineLegendSpacing)
-                        .attr("y", d => metricIndex(d.id) * 17 + lineLegendSquare * 0.75)
-                        .style("opacity", "0")
+                        .attr("y", d => metricIndex(d.id) * 17 * 2) //+ lineLegendSquare * 0.75)
+                        .attr('width', 100)
+                        .attr('height', 200)
+                        .attr("class", "lineLegend mono")
+                        .append('xhtml:p')
                         .text(d => METRICS[d.id].name)
                         .on("mouseover", legendHoverOn)
                         .on("mouseout", legendHoverOff)
                         .on("click", legendClick)
-                        .on('contextmenu', d3.contextMenu(lineChartMenu))                        
-                        .transition().duration(700)
+                        .on('contextmenu', d3.contextMenu(lineChartMenu))
+                        .style("opacity", "0")                        
                         .style("opacity", "1")
-                        .attr("class", "lineLegend mono");
+                        ;
                     
-    lineLegendLabelsSVG .transition().duration(700)
-                        .attr("y", d => metricIndex(d.id) * 17 + lineLegendSquare * 0.75);
+    lineLegendLabelsSVG.transition().duration(700)
+                        .attr("y", d => metricIndex(d.id) * 17 * 2)// + lineLegendSquare * 0.75);
 
     lineLegendLabelsSVG.exit().transition().duration(300).style("opacity", "0").remove();
 
     lineChartSVG.selectAll(".lineChartCountry")
                 .data(lineChartMetrics, d => d.country)
                 .enter()
+                .append("foreignObject")
+                .attr("class", "lineChartCountry monoMedium")                
+                .attr("x", lineLegendPadding + lineLegendSquare + lineLegendSpacing)
+                .attr("y", lineLegendHeight - 10)
+                .attr('width', 100)
+                .attr('height', 100)
                 .append("text")
-                .attr("x", lineLegendPadding)
-                .attr("y", lineLegendHeight + 10)
                 .style("opacity", "0")
                 .text(d => dataset[d.country].name)
                 .transition().duration(700)
-                .style("opacity", "1")
-                .attr("class", "lineChartCountry monoBig");
+                .style("opacity", "1");
 
     lineChartSVG.selectAll(".lineChartCountry")
                 .data(lineChartMetrics, d => d.country)
@@ -190,7 +197,7 @@ function drawLineLegend() {
                 .data(lineChartMetrics, d => d.country)
                 .style("opacity", "0")
                 .text(d => dataset[d.country].name)
-                .transition().duration(700)
+                //.transition().duration(700)
                 .style("opacity", "1");
 
     fadeUnselectedMetrics();
@@ -539,16 +546,16 @@ function lineHoverOn(c) {
             "<h4>" + METRICS[c.id].name + "</h4>");
     
     lineChartTooltip.transition().duration(300).style("opacity", "0.9");
-    lineChartTooltip.style("left", (d3.event.pageX) + "px")		
-    lineChartTooltip.style("top", (d3.event.pageY - 28) + "px");	
+    lineChartTooltip.style("left", (d3.event.pageX) + "px");	
+    lineChartTooltip.style("top", (d3.event.pageY - 28) + "px");
+    lineChartTooltip.style("display", "");	
 }
 
 
 function lineHoverOff(c) {
     legendHoverOff(c);
     lineChartTooltip.transition().duration(400).style("opacity", "0").transition()
-        .style("top", -200+"px")
-        .style("left", -200+"px");
+        .style("display", "none");
 
 }
 

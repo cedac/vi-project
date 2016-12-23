@@ -216,6 +216,13 @@ text.mono, .mono {
   fill: #ccc;
 }
 
+.monoMedium {
+  font-size: 10pt;
+  font-family: Consolas, courier;
+  fill: #ccc;
+}
+
+
 text.axis-workweek {
   fill: #000;
 }

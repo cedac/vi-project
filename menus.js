@@ -15,6 +15,48 @@ var menuMapa = [
     }
 ]
 
+var choroMenu = [
+    {
+        title: 'Select as primary country',
+        action: function(elm, d, i) {
+            if (!continentView) {
+                COUNTRY1 = d.id;
+                dispatcher.call("country1Selected", this, COUNTRY1);
+            }
+            else if (continentView) {
+                COUNTRY1 = getContinent(c);
+                dispatcher.call("country1Selected", this, COUNTRY1);
+            
+            }
+            
+        }
+    },
+    {
+        title: 'Select as secondary country',
+        action: function(elm, d, i) {
+            if (!continentView) {
+                COUNTRY2 = d.id;
+                dispatcher.call("country1Selected", this, COUNTRY2);
+            }
+            else if (continentView) {
+                COUNTRY2 = getContinent(c);
+                dispatcher.call("country1Selected", this, COUNTRY2);
+            
+            }
+        }
+    },
+    {
+        title: 'Toggle view per continent',
+        action: function(elm, d, i) {
+            continentView =  continentView == true ? false : true;
+            updateMap();
+            if (hoveredCountry) {
+                hoverOn(hoveredCountry, true);
+            }
+        }
+    }
+]
+
 var primaryOption = {
     title: 'Select as Primary metric',
     action: function(elm, d, i) {

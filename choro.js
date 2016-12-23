@@ -10,10 +10,12 @@ var maplabelSVG;
 var projection;
 var path;
 
+var altDown = false;
+
 var countriesWithData;
 
 var hoveredCountry = undefined;
-var altPressed = false;
+var continentView = false;
 
 var margin = {top: 20, right: 90, bottom: 30, left: 50},
     width = 680 - margin.left - margin.right,
@@ -90,7 +92,7 @@ function drawMap(error, data) {
             .on("mouseover", hoverOn)
             .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
             .on("mouseout", hoverOff)
-            .on('contextmenu', d3.contextMenu(menuMapa, function() {
+            .on('contextmenu', d3.contextMenu(choroMenu, function() {
                     lockHover();}))
             .on("click", click);
     
@@ -147,7 +149,8 @@ function zoomed() {
 
 function onKeyDown() {
     if (d3.event.altKey) {
-        altPressed = true;
+        altDown = true;
+        continentView = continentView == true ? false : true;
         updateMap();
         if (hoveredCountry) {
             hoverOn(hoveredCountry, true);
@@ -159,29 +162,34 @@ function onKeyUp() {
     if (d3.event.altKey) {
         return
     }
+    if (altDown && !d3.event.altKey) {
+        altDown = false;
+         altDown = false;
+        continentView = continentView == true ? false : true;
+        updateMap();
 
-    altPressed = false;
-    updateMap();
+        if (hoveredCountry) {
+                hoverOn(hoveredCountry);
+        }  
+    }
 
-    if (hoveredCountry) {
-            hoverOn(hoveredCountry);
-    }  
+   
 }
 function click(c) {
     
-    if (!d3.event.shiftKey && !d3.event.altKey) {
+    if (!d3.event.shiftKey && !continentView) {
         COUNTRY1 = c.id;
         dispatcher.call("country1Selected", this, COUNTRY1);
     }
-    else if (!d3.event.shiftKey && d3.event.altKey) {
+    else if (!d3.event.shiftKey && continentView) {
         COUNTRY1 = getContinent(c);
         dispatcher.call("country1Selected", this, COUNTRY1);
     }
-    else if (d3.event.shiftKey && !d3.event.altKey) {
+    else if (d3.event.shiftKey && !continentView) {
         COUNTRY2 = c.id;
         dispatcher.call("country2Selected", this, COUNTRY2);
     }
-    else if (d3.event.shiftKey && d3.event.altKey) {
+    else if (d3.event.shiftKey && continentView) {
         COUNTRY2 = getContinent(c);
         dispatcher.call("country2Selected", this, COUNTRY2);
     }
@@ -220,7 +228,7 @@ function hoverOn(c, forceContinent = false) {
     } else {
         hoveredCountry = c;
 
-        if (d3.event.altKey) {
+        if (continentView) {
             d3.selectAll(".country")
             .filter(d => (d.id !== c.id && d.id !== COUNTRY1 && d.id !== COUNTRY2))
             .filter(d => (getContinent(d) != getContinent(c)))
@@ -305,7 +313,7 @@ function heatColor(c) {
         return heatColorContinent(c, color)
     }
 
-    if (altPressed && c.id != COUNTRY1 && c.id != COUNTRY2) {
+    if (continentView && c.id != COUNTRY1 && c.id != COUNTRY2) {
         return heatColorContinent(c, color)
     }
 
