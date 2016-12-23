@@ -26,7 +26,7 @@ var tooltip = d3.select("body")
         .style("z-index", "10")
         .style("visibility", "hidden");
 
-function bootstrap_map(dataset) {
+function bootstrap_map(data) {
     dataset = data;
     mapMetric = "OVERALL";
 

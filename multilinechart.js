@@ -55,8 +55,8 @@ function parseMetricsForCountry (metric, country) {
     return parsedValues;
 }    
 
-function bootstrap_linechart(dataset) {
-    dataset = data;
+function bootstrap_linechart(d) {
+    dataset = d;
     lineChartMetrics.push({"country": COUNTRY1, "id": METRIC1, "color": rentColor(), "data": parseMetricsForCountry(METRIC1, COUNTRY1)});    
     lineChartMetrics.push({"country": COUNTRY1, "id": METRIC2, "color": rentColor(), "data": parseMetricsForCountry(METRIC2, COUNTRY1)});    
     
