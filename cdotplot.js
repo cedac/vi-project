@@ -3,10 +3,10 @@ var cdot_scale_value = (d, v) => scale_metric(d, v, d => d.code)
 var cdot_scale_value1 = d => scale_metric(d, d => d.v1, d => d.code)
 var cdot_scale_value2 = d => scale_metric(d, d => d.v2, d => d.code)
 
-var cdot_x_scale = (d, v) => DOTPLOT_X_PADDING + (cdot_scale_value(d,v) - 1) * DOTPLOT_SIZE
+var cdot_x_scale = (d, v) => DOTPLOT_X_PADDING + (5 - cdot_scale_value(d,v)) * DOTPLOT_SIZE
 var cdot_x1_scale = d => cdot_x_scale(d, d => d.v1)
 var cdot_x2_scale = d => cdot_x_scale(d, d => d.v2)
-var cdot_diff_scale = (d, f) => DOTPLOT_X_PADDING + (f(cdot_scale_value1(d), cdot_scale_value2(d)) - 1) * DOTPLOT_SIZE
+var cdot_diff_scale = (d, f) => DOTPLOT_X_PADDING + (5 - f(cdot_scale_value1(d), cdot_scale_value2(d))) * DOTPLOT_SIZE
 var cdot_min_scale = d => cdot_diff_scale(d, Math.min)
 var cdot_max_scale = d => cdot_diff_scale(d, Math.max)
 
@@ -178,7 +178,7 @@ function drawDotplot(c1, c2) {
 
     const cdot_legend_y = 27.5 * gridSize
     const cdot_legend_size = 3
-    const axis_color = "#777"
+    const axis_color = "#ccc"
 
     heatmapSVG.append('line')
         .attr('y1', cdot_legend_y)
@@ -197,7 +197,7 @@ function drawDotplot(c1, c2) {
         .style('stroke', axis_color)
 
     legend.append('text')
-        .text(d => d+1)
+        .text(d => 5-d)
         .attr('y', cdot_legend_y + 5 * cdot_legend_size)
         .attr('x', d => DOTPLOT_X_PADDING + d * DOTPLOT_SIZE)
         .style("text-anchor", "middle")
